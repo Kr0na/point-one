@@ -5,9 +5,7 @@ export default class RestStorage extends AbstractStorage {
     constructor(key, options) {
         super(key, options)
         this.options = options
-        if (this.options.hasOwnProperty('cache')) {
-
-        }
+        this.injectCache()
     }
 
     fetch() {

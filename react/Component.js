@@ -1,23 +1,36 @@
-import {Component as Base} from 'react'
+import React from 'react'
 import EventManager from '../src/EventManager'
 
-export default class Component extends Base {
+export default class Component extends React.Component {
 
     constructor(props, context) {
         super(props, context)
         this.listeners = []
     }
 
+    componentDidMount() {
+        this.setUp()
+    }
+
+    setUp() {
+
+    }
+
+    tearDown() {
+
+    }
+
     componentWillUnmout() {
         this.listeners.forEach(listener => listener())
+        this.tearDown()
     }
 
     listenTo(eventType, callback) {
         this.listeners.push(EventManager.getSharedEventManager().subscribe(eventType, callback))
     }
 
-    listenStore(store, callback) {
-        this.listeners.push(store.subscribe('change', callback))
+    listenStore(store, callback, event = 'change') {
+        this.listeners.push(store.subscribe(event, callback))
     }
 
     when(expression, whenTrue, whenFalse = null) {

@@ -1,4 +1,4 @@
-import {PROVIDE_KEY, TWICE_INIT, warn, err} from './messages'
+import {PROVIDE_KEY, TWICE_INIT, SUGGEST_CACHE, warn, err, info} from './messages'
 import EventManager from './EventManager'
 
 let storages = {}
@@ -19,6 +19,12 @@ export default class AbstractStorage {
         this.eventManager = EventManager.get(key)
         this.idProperty = options.idProperty || 'id'
         this.idFormatter = options.idFormatter || (id=>id)
+    }
+
+    injectCache() {
+        if (!this.options.cache) {
+            info(SUGGEST_CACHE.replace(':name', this.key).replace(':type', 'storage'));
+        }
     }
 
     getInitialState() {
