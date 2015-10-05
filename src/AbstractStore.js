@@ -100,6 +100,10 @@ export default class AbstractStore {
         }
     }
 
+    delete(data) {
+
+    }
+
     user() {
         if (AuthStore.get()) {
             return AuthStore.get().user()
