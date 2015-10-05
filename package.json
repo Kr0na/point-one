@@ -1,0 +1,26 @@
+{
+  "name": "krux",
+  "version": "0.0.0",
+  "description": "Krux - Advanced Flux",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Flux",
+    "React",
+    "Krux",
+    "Krona"
+  ],
+  "author": "Alex Grand <alex@granted.name>",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^0.13.3"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "chai": "^3.3.0",
+    "jasmine": "^2.3.2",
+    "mocha": "^2.3.3"
+  }
+}
