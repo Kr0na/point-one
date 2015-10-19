@@ -64,4 +64,27 @@ export default class ActionProvider {
     static get(name) {
         return actions[name]
     }
+
+    static create(name, proto) {
+        return new (ActionProvider.createClass(name, proto));
+    }
+
+    static createClass(name, proto) {
+        let MultiAction = class extends ActionProvider {
+            constructor(key) {
+                super(name + key)
+            }
+
+            init() {
+                Object.keys(proto).forEach(key => {
+                    this[key] = this[key].bind(this)
+                })
+                super.init()
+            }
+        }
+        Object.keys(proto).forEach(key => {
+            MultiAction.prototype[key] = proto[key]
+        })
+        return MultiAction
+    }
 }

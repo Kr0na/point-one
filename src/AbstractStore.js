@@ -68,7 +68,7 @@ export default class AbstractStore {
      * Method for simplify loading some data from storage
      * @param id
      * @param refresh
-     * @returns {*}
+     * @returns {Promise}
      */
     find(id, refresh = false) {
         if(!refresh && this.has(id)) {
@@ -223,9 +223,26 @@ export default class AbstractStore {
         return stores[name]
     }
 
-    static create(name, child) {
-        let store = new AbstractStore(name)
+    static create(name, proto) {
+        return new (AbstractStore.createClass(name, proto));
+    }
 
-        return store
+    static createClass(name, proto) {
+        let MultiStore = class extends AbstractStore {
+            constructor(key, idProperty, idFormatter) {
+                super(name + key, idProperty, idFormatter)
+            }
+
+            init() {
+                Object.keys(proto).forEach(key => {
+                    this[key] = this[key].bind(this)
+                })
+                super.init()
+            }
+        }
+        Object.keys(proto).forEach(key => {
+            MultiStore.prototype[key] = proto[key]
+        })
+        return MultiStore
     }
 }
