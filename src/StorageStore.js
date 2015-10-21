@@ -12,6 +12,23 @@ export default class StorageStore extends MemoryStore {
         this.behavior = options.behavior || StorageStore.STORE_AFTER
     }
 
+    fetch() {
+        let loaded = false
+        if (this.storage.hasCache()) {
+            this.storage.getCache().then(docs => {
+                !loaded && this.setState(docs)
+            })
+        }
+        if (!this.storage.hasCache() || this.storage.cacheExpired()) {
+            this.storage.fetch().then(
+                docs => {
+                    loaded = true
+                    this.setState(docs)
+                }
+            )
+        }
+    }
+
     find(id, defaultValue = null, request = true) {
         let result = super.find(id)
         if (result) {
@@ -33,32 +50,40 @@ export default class StorageStore extends MemoryStore {
 
     insert(data, notifyAll) {
         if (!this.raw && this.behavior == StorageStore.STORE_AFTER) {
-            this.storage.insert(data).then(result => {
+            return this.storage.insert(data).then(result => {
                 super.insert(result, notifyAll)
+                return result
             })
         } else {
-            !this.raw && this.storage.insert(data).then(
-                result => {
-                    super.insert(result, notifyAll)
-                },
-                err => {
-                    if (data[this.idProperty]) {
-                        this.beginRaw()
-                        this.delete(data[this.idProperty])
-                        this.endRaw()
-                    } else {
-                        //Remove element
-                    }
-                }
-            )
             super.insert(data, notifyAll)
+            if (!this.raw) {
+                return this.storage.insert(data).then(
+                    result => {
+                        super.insert(result, notifyAll)
+                        return result
+                    },
+                    err => {
+                        if (data[this.idProperty]) {
+                            this.beginRaw()
+                            this.delete(data[this.idProperty])
+                            this.endRaw()
+                        } else {
+                            //Remove element
+                        }
+                        throw err
+                    }
+                )
+            } else {
+                return Promise.resolve(data)
+            }
         }
     }
 
     update(id, data, notify) {
         if (!this.raw && this.behavior == StorageStore.STORE_AFTER) {
-            this.storage.update(id, data).then(result => {
+            return this.storage.update(id, data).then(result => {
                 super.update(id, result, notify)
+                return result
             })
         } else {
             !this.raw && this.storage.update(id, data).then(
@@ -97,14 +122,17 @@ export default class StorageStore extends MemoryStore {
 
     delete(id) {
         if (!this.raw && this.behavior == StorageStore.STORE_AFTER) {
-            this.storage.delete(id).then(result => {
+            return this.storage.delete(id).then(result => {
                 super.delete(id)
+                return result
             })
         } else {
-            if (!this.raw) {
-                this.storage.delete(id)
-            }
             super.delete(id)
+            if (!this.raw) {
+                return this.storage.delete(id)
+            } else {
+                return Promise.resolve()
+            }
         }
     }
 

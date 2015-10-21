@@ -22,9 +22,21 @@ export default class AbstractStorage {
     }
 
     injectCache() {
-        if (!this.options.cache) {
+        if (!this.hasCache()) {
             info(SUGGEST_CACHE.replace(':name', this.key).replace(':type', 'storage'));
         }
+    }
+
+    hasCache() {
+        return !!this.options.cache
+    }
+
+    getCache() {
+        throw new Error('Unimplemented method getCache call for ' + this.key)
+    }
+
+    cacheExpired() {
+        throw new Error('Unimplemented method cacheExpired call for ' + this.key)
     }
 
     getInitialState() {
