@@ -23,6 +23,12 @@ export default class ActionProvider {
 
     }
 
+    /**
+     *
+     * @param {Function} callback
+     * @param {Integer} timeout
+     * @returns {{register: *, unregister: unregister}}
+     */
     repeatEvery(callback, timeout = 1000) {
         var
             interval = null,
@@ -37,7 +43,11 @@ export default class ActionProvider {
             }
             ;
 
-        return register(timeout)
+        register(timeout)
+        return {
+            register,
+            unregister
+        }
     }
 
     /**
@@ -65,10 +75,22 @@ export default class ActionProvider {
         return actions[name]
     }
 
+    /**
+     * Method for functional use of Actions that additionally bind this for methods
+     * @param {String} name
+     * @param {Object} proto
+     * @returns {{init: {(), ()}, emit: (function(String, Object=): Promise), repeatEvery: (function(*=, *=))}}
+     */
     static create(name, proto) {
         return new (ActionProvider.createClass(name, proto));
     }
 
+    /**
+     * Method for functional use of Actions that additionally bind this for methods
+     * @param {String} name
+     * @param {Object} proto
+     * @returns {{new(*): {init: {(), ()}, emit: (function(String, Object=): Promise), repeatEvery: (function(*=, *=))}, create: (function(*=, *=)), get: (function(*)), new(*=): {init: {(), ()}, emit: (function(String, Object=): Promise), repeatEvery: (function(*=, *=))}, createClass: (function(*, *=))}}
+     */
     static createClass(name, proto) {
         let MultiAction = class extends ActionProvider {
             constructor(key) {

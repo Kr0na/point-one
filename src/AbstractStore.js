@@ -4,6 +4,9 @@ import {PROVIDE_KEY, TWICE_INIT, warn, err} from './messages'
 
 let stores = {}
 
+/**
+ * @deprecated
+ */
 export default class AbstractStore {
 
     constructor(key, idProperty = 'id', idFormatter = id => id) {
@@ -64,6 +67,10 @@ export default class AbstractStore {
         }
     }
 
+    getState() {
+        return this.state
+    }
+
     /**
      * Method for simplify loading some data from storage
      * @param id
@@ -96,12 +103,36 @@ export default class AbstractStore {
                 throw err
             })
         } else {
-
+            let data =  this.state.filter(data => {
+                var use = true
+                Object.keys(criteria).forEach(key => {
+                    if (!use) return
+                    if (Array.isArray(criteria[key])) {
+                        use = criteria[key].indexOf(data[key]) !== -1
+                    } else {
+                        use = criteria[key] == data[key]
+                    }
+                })
+                return use
+            })
+            if (updateState) {
+                this.setState(data)
+            }
+            return Promise.resolve(data)
         }
     }
 
     delete(data) {
-
+        if (this.storage) {
+            return this.storage
+        } else {
+            if (data[this.idProperty]) {
+                this.state.slice(this.state.indexOf(data), 1)
+                return Promise.resolve(data)
+            } else {
+                return Promise.resolve(data)
+            }
+        }
     }
 
     user() {
@@ -164,7 +195,8 @@ export default class AbstractStore {
         })
     }
 
-    listenTo(event, callback) {
+    listenTo(event, callback, bind = true) {
+        callback = bind ? callback.bind(this) : callback
         EventManager.getSharedEventManager().subscribe(event, callback)
         return () => {
             EventManager.getSharedEventManager().unsubscribe(event, callback)

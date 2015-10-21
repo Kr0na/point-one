@@ -36,20 +36,11 @@ export default class AbstractStorage {
     }
 
     find(id) {
-        var found = this.state.filter(data => data[this.idProperty] == id)
-        if (found.length) {
-            return Promise.resolve(found.shift());
-        } else {
-            return Promise.reject(id)
-        }
+        return this.state.filter(data => data[this.idProperty] == id).shift()
     }
 
     findOneBy(criteria) {
-        return this.findBy(criteria).then(
-            found => {
-                return found.shift()
-            }
-        )
+        return this.findBy(criteria).shift()
     }
 
     findBy(criteria) {
@@ -65,11 +56,7 @@ export default class AbstractStorage {
             })
             return use
         })
-        if (found.length) {
-            return Promise.resolve(found)
-        } else {
-            return Promise.reject(criteria)
-        }
+        return found
     }
 
     commit(data) {
@@ -77,15 +64,9 @@ export default class AbstractStorage {
             data[this.idProperty] = this.idFormatter(this.state.length + 1)
         }
         this.state.push(data)
-        return Promise.resolve(data)
     }
 
-    delete(data) {
-        if (data[this.idProperty]) {
-            this.state.slice(this.state.indexOf(data), 1)
-            return Promise.resolve(data)
-        } else {
-            return Promise.resolve(data)
-        }
+    delete(id) {
+        throw new Error('Trying to call unimplemented method delete on ' + this.key)
     }
 }

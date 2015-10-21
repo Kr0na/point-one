@@ -36,4 +36,12 @@ export default class Component extends React.Component {
     when(expression, whenTrue, whenFalse = null) {
         return expression ? whenTrue : whenFalse
     }
+
+    assignToStore(variable, store) {
+        this.listenStore(store, () => {
+            this.setState({
+                [variable]: store.getState()
+            })
+        })
+    }
 }

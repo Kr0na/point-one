@@ -5,6 +5,8 @@ export const SUGGEST_CACHE = 'We suggest to use some cache for :name :type. This
 export const STORAGE_EMPTY_CONFIG = 'You try to initialize Storage manager with empty config, please make sure, that you don\'t forget something'
 export const STORAGE_NOT_FOUND = 'You try to get :name storage that doesn\'t have config. For now we use MemoryStorage for it. For future use please check your config'
 export const STORAGE_TYPE_NOT_FOUND = 'You request an storage with type :type, but we doesn\'t found it in all registered types: :all'
+export const STORAGE_NOT_PROVIDED = 'You must provide storage to use :what.'
+export const STORAGE_WITHOUT_ID = 'You try to insert data without id. For now we generate id, but we are not sure that it\'s unique. Data json: :data'
 
 export function warn(message) {
     if (process.env.NODE_ENV !== 'production') {
