@@ -1,3 +1,5 @@
 require('babel/register')
 require('chai').should()
-require('./Krux')
+//require('./Krux')
+require('./Store')
+require('./Reducer')

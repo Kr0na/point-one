@@ -25,23 +25,22 @@ export default class Component extends React.Component {
         this.tearDown()
     }
 
-    listenTo(eventType, callback) {
-        this.listeners.push(EventManager.getSharedEventManager().subscribe(eventType, callback))
-    }
-
-    listenStore(store, callback, event = 'change') {
-        this.listeners.push(store.subscribe(event, callback))
+    listen(store, fields) {
+        this.listeners.push(store.listen((state) => {
+            let
+                newState = {},
+                hasChanges = false
+            Object.keys(fields).forEach(key => {
+                if (this.state[key] !== state[key]) {
+                    newState[key] = state[key]
+                    hasChanges = true
+                }
+            })
+            hasChanges && this.setState(newState)
+        }))
     }
 
     when(expression, whenTrue, whenFalse = null) {
         return expression ? whenTrue : whenFalse
-    }
-
-    assignToStore(variable, store) {
-        this.listenStore(store, () => {
-            this.setState({
-                [variable]: store.getState()
-            })
-        })
     }
 }
