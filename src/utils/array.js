@@ -8,9 +8,17 @@ export function arrayRemove(state:Array, index:Number):Array {
 
 export function arrayReplace(state:Array, index:Number, newItem:Object):Array {
     return [
-        ...state.slice(0, index - 1),
+        ...state.slice(0, index),
         newItem,
         ...state.slice(index + 1, state.length)
+    ]
+}
+
+export function arrayPlace(state:Array, item:Object, after:Number):Array {
+    return [
+        ...state.slice(0, after),
+        item,
+        ...state.slice(after, state.length)
     ]
 }
 
