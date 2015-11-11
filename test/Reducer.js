@@ -1,7 +1,7 @@
 import {concatReducers} from '../index'
 
-let foo = (event, value) => {
-    switch (event.name) {
+let foo = (value, event) => {
+    switch (event.type) {
         case 'foo':
             return 'bar'
         case 'bar':
@@ -11,8 +11,8 @@ let foo = (event, value) => {
     }
 }
 
-let bar = (event, value) => {
-    switch (event.name) {
+let bar = (value, event) => {
+    switch (event.type) {
         case 'foo':
             return undefined
         case 'bar':
@@ -28,7 +28,7 @@ describe('Reducer', () => {
         let
             state = {name: 'Alex'},
             obj = {}
-        obj = reducer({name: "foo"}, state)
+        obj = reducer({type: "foo"}, state)
         obj.should
             .have.property('name', 'Alex')
         obj.should
@@ -36,14 +36,14 @@ describe('Reducer', () => {
         obj.should
             .not.have.property('bar')
 
-        obj = reducer({name: "bar"}, state)
+        obj = reducer({type: "bar"}, state)
         obj.should
             .have.property('name', 'Alex')
         obj.should
             .have.property('bar', 'foo')
         obj.should
             .not.have.property('foo')
-        obj = reducer({name: "nothing"}, state)
+        obj = reducer({type: "nothing"}, state)
         obj.should
             .be.equal(state)
     })

@@ -2,13 +2,13 @@ let sharedEventManager
 
 let managers = {}
 
-export default class EventManager {
-    
+export class EventManager {
+
     static getSharedEventManager() {
         if (!sharedEventManager) {
             sharedEventManager = new EventManager
         }
-        
+
         return sharedEventManager
     }
 
@@ -18,7 +18,7 @@ export default class EventManager {
         }
         return managers[name]
     }
-    
+
     constructor(key) {
         this.key = key
         this.feed = {};
@@ -69,10 +69,10 @@ export default class EventManager {
         let eventName = data.eventType;
 
         this.globals.forEach((item, index) => {
-            item(data);
+            item(data)
         });
         if (!this.feed.hasOwnProperty(eventName)) {
-            return Promise.resolve([]);
+            return Promise.resolve([])
         }
         var listeners = [];
         this.feed[eventName].forEach((item, index) => {
@@ -84,14 +84,9 @@ export default class EventManager {
                 if (result != null && result.then) {
                     result.then(resolve, reject);
                 } else {
-                    resolve(result || true);
+                    resolve(result || true)
                 }
             }))
-        });
-        //Publish event to SharedEventManager after this execution
-        setTimeout(() => {
-            data.eventType = this.key + data.eventType.toUpperCase()
-            EventManager.getSharedEventManager().dispatch(data)
         })
         return Promise.all(listeners);
     }

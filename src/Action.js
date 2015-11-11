@@ -1,5 +1,5 @@
-
-export function createPromiseAction(handler:Function, onSuccess:String, onFail:?String = null):Function {
+/**@flow*/
+export function createPromiseAction(handler:Function, onSuccess:string, onFail:?string = null):Function {
     if (!onFail) {
         onFail = onSuccess + '_FAIL'
     }
@@ -8,11 +8,11 @@ export function createPromiseAction(handler:Function, onSuccess:String, onFail:?
             .then(
                 data => ({
                     ...data,
-                    name: onSuccess
+                    type: onSuccess
                 }),
                 err => ({
                     ...err,
-                    name: onFail
+                    type: onFail
                 })
             )
     }

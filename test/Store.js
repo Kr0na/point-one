@@ -1,8 +1,8 @@
 import {createStore, Store} from '../index'
 
 describe('Store', () => {
-    let reducer = (event, state) => {
-        switch (event.name) {
+    let reducer = (state, event) => {
+        switch (event.type) {
             case 'foo':
                 return {
                     foo: 'bar'
@@ -26,7 +26,7 @@ describe('Store', () => {
     it('should change state correctly', () => {
         let instance = createStore(reducer)
         instance.dispatch({
-            name: 'foo'
+            type: 'foo'
         })
         instance.state.should
             .have.property('foo', 'bar')
@@ -63,10 +63,10 @@ describe('Store', () => {
                 }
             })
         instance.dispatch({
-            name: 'foo'
+            type: 'foo'
         })
         instance.dispatch({
-            name: 'bar'
+            type: 'bar'
         })
         calledFoo.should.be.true
         calledBar.should.be.true
