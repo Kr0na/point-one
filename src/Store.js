@@ -1,5 +1,6 @@
 /**@flow*/
 import {STORE_METHOD_NOT_FOUND, warn} from './messages'
+import {register} from './EventManager'
 
 function makeActionName(event:{type:string}):string {
     return event.type.toLowerCase().replace(/_[\w]/, (found, match) => match.toUpperCase())
@@ -31,6 +32,7 @@ export class Store {
     this.dispatch = this.dispatch.bind(this)
     this.listen = this.listen.bind(this)
     this.trigger = this.trigger.bind(this)
+    register(this.dispatch)
     this.init()
   }
 
