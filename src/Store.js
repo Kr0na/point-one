@@ -25,6 +25,7 @@ export class Store {
         this.state = options.state
       }
     }
+    this.reducer = options.reducer
     this.listeners = {}
     this.index = 10
     this.dispatch = this.dispatch.bind(this)
@@ -49,7 +50,7 @@ export class Store {
       )
     } else {
       let
-        result = this.reducer(event, this.state)
+        result = this.reducer(this.state, event)
       if (!Object.is(this.state, result)) {
         this.state = result
         this.trigger()

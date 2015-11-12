@@ -28,7 +28,7 @@ describe('Reducer', () => {
         let
             state = {name: 'Alex'},
             obj = {}
-        obj = reducer({type: "foo"}, state)
+        obj = reducer(state, {type: "foo"})
         obj.should
             .have.property('name', 'Alex')
         obj.should
@@ -36,14 +36,14 @@ describe('Reducer', () => {
         obj.should
             .not.have.property('bar')
 
-        obj = reducer({type: "bar"}, state)
+        obj = reducer(state, {type: "bar"})
         obj.should
             .have.property('name', 'Alex')
         obj.should
             .have.property('bar', 'foo')
         obj.should
             .not.have.property('foo')
-        obj = reducer({type: "nothing"}, state)
+        obj = reducer(state, {type: "nothing"})
         obj.should
             .be.equal(state)
     })

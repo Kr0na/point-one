@@ -33,7 +33,7 @@ describe('Store', () => {
         instance.state.should
             .not.have.property('bar')
         instance.dispatch({
-            name: 'bar'
+            type: 'bar'
         })
         instance.state.should
             .have.property('bar', 'foo')
@@ -74,7 +74,7 @@ describe('Store', () => {
             throw new Error('this case must be unreachable')
         })
         instance.dispatch({
-            name: 'nothing'
+            type: 'nothing'
         })
     })
     it('should listen to promise', () => {
@@ -92,7 +92,7 @@ describe('Store', () => {
                 resolve()
             })
             instance.dispatch(Promise.resolve({
-                name: 'foo'
+                type: 'foo'
             }))
         }))
         promises.push(new Promise((resolve, reject) => {
@@ -105,7 +105,7 @@ describe('Store', () => {
                 resolve()
             })
             instance.dispatch(Promise.reject({
-                name: 'bar'
+                type: 'bar'
             }))
         }))
 
