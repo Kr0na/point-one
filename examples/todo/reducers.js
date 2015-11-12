@@ -1,8 +1,8 @@
 import {TODO_ADD, TODO_DELETE} from './constants'
 import {useArrayHash, concatReducers, arrayRemove, arrayAppend} from '../../index'
 
-let todos = useArrayHash((event, state, hash) => {
-    switch (event.name) {
+let todos = useArrayHash((state, event, hash) => {
+    switch (event.type) {
         case TODO_ADD:
             let todo = Object.create(event.data)
             todo.id = state.length

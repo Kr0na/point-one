@@ -1,8 +1,8 @@
 import {USER_AUTH, USER_LOGOUT, USER_AUTH_FAIL} from './constants'
 import {concatReducers} from '../../index'
 
-function user(event, state) {
-    switch (event.name) {
+function user(state, event) {
+    switch (event.type) {
         case USER_AUTH:
             return event.user
         case USER_LOGOUT:
@@ -12,8 +12,8 @@ function user(event, state) {
     }
 }
 
-function errors(event, state) {
-    switch (event.name) {
+function errors(state, event) {
+    switch (event.type) {
         case USER_AUTH:
             return undefined
         case USER_AUTH_FAIL:
