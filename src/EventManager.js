@@ -1,12 +1,16 @@
+/**@flow*/
 let sharedEventManager
 
 let managers = {}
 
 export class EventManager {
+  key:string;
+  feed:Object;
+  globals:Array<Function>;
 
     static getSharedEventManager() {
         if (!sharedEventManager) {
-            sharedEventManager = new EventManager
+            sharedEventManager = new EventManager('shared')
         }
 
         return sharedEventManager
@@ -19,23 +23,26 @@ export class EventManager {
         return managers[name]
     }
 
-    constructor(key) {
+    constructor(key:string) {
         this.key = key
         this.feed = {};
         this.globals = [];
     }
 
-    register(callback) {
-        return this.globals.push(callback);
+    register(callback:Function):Function {
+        this.globals.push(callback);
+        return () => {
+          this.unregister(callback);
+        }
     }
 
-    subscribe(eventName, callback) {
+    subscribe(eventName:string, callback:Function):Function {
         if (!this.feed.hasOwnProperty(eventName)) {
             this.feed[eventName] = [];
         }
         this.feed[eventName].push(callback);
 
-        return () => {1
+        return () => {
             this.unsubscribe(eventName, callback)
         }
     }
@@ -44,7 +51,7 @@ export class EventManager {
      * @param eventName
      * @param callback
      */
-    unsubscribe(eventName, callback) {
+    unsubscribe(eventName:string, callback:Function) {
         if (!this.feed[eventName]) {
             return;
         }
@@ -54,7 +61,7 @@ export class EventManager {
         }
     }
 
-    unregister(callback) {
+    unregister(callback:Function) {
         let index = this.globals.indexOf(callback);
         if (index != -1) {
             this.globals.splice(index, 1);
@@ -65,8 +72,8 @@ export class EventManager {
      * @param {Object} data
      * @returns {Promise}
      */
-    dispatch(data) {
-        let eventName = data.eventType;
+    dispatch(data:{type:string}):Promise {
+        let eventName = data.type;
 
         this.globals.forEach((item, index) => {
             item(data)
