@@ -1,5 +1,5 @@
 # Krux - Is a simple but powerful Flux replacements
-
+[![Build Status](https://travis-ci.org/Kr0na/krux.svg)](https://travis-ci.org/Kr0na/krux)
 ## Actions
 Action is any function that can return event or promise
 
