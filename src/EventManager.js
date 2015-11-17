@@ -7,11 +7,13 @@ export class EventManager {
   key:string;
   feed:Object;
   globals:Array<Function>;
+  dispatch:Function;
 
   constructor(key:string) {
     this.key = key
     this.feed = {};
     this.globals = [];
+    this.dispatch = this.dispatch.bind(this)
   }
 
   register(callback:Function):Function {
@@ -54,10 +56,14 @@ export class EventManager {
   }
 
   /**
-   * @param {Object} data
+   * @param {Object|Promise} data
    * @returns {Promise}
    */
-  dispatch(data:{type:string}):Promise {
+  dispatch(data:Promise|{type:string}):Promise {
+    if (data.then) {
+      return data.then(this.dispatch, this.dispatch)
+    }
+    // $FlowIgnore
     let eventName = data.type;
 
     this.globals.forEach((item, index) => {

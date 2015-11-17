@@ -1,6 +1,7 @@
 /**@flow*/
 import {STORE_METHOD_NOT_FOUND, warn} from './messages'
 import {register} from './EventManager'
+import {ActionSource} from './Action'
 
 function makeActionName(event:{type:string}):string {
     return event.type.toLowerCase().replace(/_[\w]/, (found, match) => match.toUpperCase())
@@ -44,8 +45,10 @@ export class Store {
       return {}
   }
 
-  dispatch(event:Promise|{type:String}):Promise {
-    if (event.then) {
+  dispatch(event:ActionSource|Promise|{type:String}):Promise {
+    if (event instanceof ActionSource) {
+      return event.injectDispatcher(this.dispatch)
+    } else if (event.then) {
       return event.then(
         this.dispatch,
         this.dispatch
