@@ -3,10 +3,6 @@ import {STORE_METHOD_NOT_FOUND, warn} from './messages'
 import {register} from './EventManager'
 import {ActionSource} from './Action'
 
-function makeActionName(event:{type:string}):string {
-    return event.type.toLowerCase().replace(/_[\w]/, (found, match) => match.toUpperCase())
-}
-
 export class Store {
   state: any;
   reducer: Function;
@@ -85,4 +81,31 @@ export class Store {
 
 export function createStore(reducer:Function, state:Object = {}):Store {
     return new Store({reducer, state})
+}
+
+export function logEvents(logger:{debug:Function}, key:string):Function {
+  return next => (reducer:Function, state:Object = {}) => {
+    let
+      store:Store = next(reducer, state),
+      originalDispatch = store.dispatch
+    store.dispatch = (event:{type:string}) => {
+      if (event instanceof ActionSource) {
+        return event.injectDispatcher(store.dispatch)
+      } else if (event.then) {
+        return event.then(store.dispatch, store.dispatch)
+      }
+      let result = originalDispatch(event)
+      result.then(
+        data => {
+          logger.debug(
+            'Project Store Dispatched event:' + event.type,
+            event,
+            'Store data:',
+            JSON.parse(JSON.stringify(data))
+          )
+        }
+      )
+      return result
+    }
+  }
 }
