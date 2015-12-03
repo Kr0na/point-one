@@ -1,6 +1,6 @@
 {
   "name": "point-one",
-  "version": "0.0.99",
+  "version": "0.0.102",
   "description": "Point One - Advanced Flux/Redux for React application",
   "respository": {
     "type" : "git",

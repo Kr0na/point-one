@@ -8,17 +8,17 @@ export function listen(store:{listen:Function, getState:Function}, fields:Array<
         if (!this.state) {
           this.state = {}
         }
-        this.state = fields.reduce((state:Object, key:string) => {
-          state[key] = store.getState()[key]
-        }, this.state)
+        fields.forEach(key => {
+          this.state[key] = store.getState()[key]
+        })
         if (!this._listeners) {
           this._listeners = []
         }
       }
 
       componentDidMount() {
-        super.componentDidMount()
-        this.listeners.push(store.listen(state => {
+        super.componentDidMount && super.componentDidMount()
+        this._listeners.push(store.listen(state => {
           let
             newState = {},
             hasChanges = false
@@ -33,7 +33,7 @@ export function listen(store:{listen:Function, getState:Function}, fields:Array<
       }
 
       componentWillUnmout() {
-        super.componentWillUnmout()
+        super.componentWillUnmout && super.componentWillUnmout()
         this._listeners.forEach(listener => listener())
       }
     }
