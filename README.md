@@ -1,5 +1,5 @@
 # Point One - Is a powerful implementation of Flux/Redux to start your application with easy
-[![Build Status](https://travis-ci.org/Kr0na/krux.svg)](https://travis-ci.org/Kr0na/point-one)
+[![Build Status](https://travis-ci.org/Kr0na/point-one.svg?branch=master)](https://travis-ci.org/Kr0na/point-one)
 ## Actions
 Action is any function that can return event or promise
 
