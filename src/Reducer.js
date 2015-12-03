@@ -1,5 +1,5 @@
 /**@flow */
-export function creacteReducer(eventType:string, callback:Function):Function {
+export function createReducer(eventType:string, callback:Function):Function {
     return (state, event) => {
         switch (event.type) {
             case eventType:
@@ -69,6 +69,16 @@ export function useArrayHash(callback:Function, idProperty:?string = 'id'):Funct
       rehash(result)
     }
     return result
+  }
+}
+
+export function concatEventReducers(reducers:Object):Function {
+  return (state, event:{type:string}) => {
+    if (reducers.hasOwnProperty(event.type)) {
+      return reducers[event.type](state, event)
+    } else {
+      return state
+    }
   }
 }
 

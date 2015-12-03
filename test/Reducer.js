@@ -1,4 +1,4 @@
-import {concatReducers} from '../index'
+import {concatReducers, concatEventReducers} from '../src/index'
 
 let foo = (value, event) => {
     switch (event.type) {
@@ -21,6 +21,11 @@ let bar = (value, event) => {
             return value
     }
 }
+
+let eventReducers = concatEventReducers({
+  'foo': () => 'foo',
+  'bar': () => 'bar'
+})
 
 describe('Reducer', () => {
     let reducer = concatReducers({foo, bar})
@@ -46,5 +51,27 @@ describe('Reducer', () => {
         obj = reducer(state, {type: "nothing"})
         obj.should
             .be.equal(state)
+    })
+    it('should work with Event Reducers', () => {
+      let
+        reducer = concatReducers({
+          foo: eventReducers
+        }),
+        state = {name: 'Alex'},
+        obj = {}
+      obj = reducer(state, {type: "foo"})
+      obj.should
+          .have.property('name', 'Alex')
+      obj.should
+          .have.property('foo', 'foo')
+
+      obj = reducer(state, {type: "bar"})
+      obj.should
+          .have.property('name', 'Alex')
+      obj.should
+          .have.property('foo', 'bar')
+      obj = reducer(state, {type: "nothing"})
+      obj.should
+          .be.equal(state)
     })
 })

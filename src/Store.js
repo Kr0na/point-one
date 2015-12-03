@@ -1,5 +1,4 @@
 /**@flow*/
-import {STORE_METHOD_NOT_FOUND, warn} from './messages'
 import {register} from './EventManager'
 import {ActionSource} from './Action'
 
@@ -9,11 +8,12 @@ export class Store {
   listeners: Object;
   index: number;
   dispatch: Function;
+  getState: Function;
   listen: Function;
   trigger: Function;
 
   constructor(options:{state:Object, reducer: Function}) {
-    this.state = this.getInitialState()
+    this.state = {}
     if (options.state) {
       if (typeof options.state  == "object") {
         Object.keys(options.state).forEach(key => {
@@ -27,18 +27,10 @@ export class Store {
     this.listeners = {}
     this.index = 10
     this.dispatch = this.dispatch.bind(this)
+    this.getState = this.getState.bind(this)
     this.listen = this.listen.bind(this)
     this.trigger = this.trigger.bind(this)
     register(this.dispatch)
-    this.init()
-  }
-
-  init() {
-
-  }
-
-  getInitialState():Object {
-      return {}
   }
 
   dispatch(event:ActionSource|Promise|{type:String}):Promise {
@@ -79,33 +71,28 @@ export class Store {
   }
 }
 
-export function createStore(reducer:Function, state:Object = {}):Store {
-    return new Store({reducer, state})
+export function compose(...funcs:Array<Function>):Function {
+  return arg => funcs.reduceRight((composed, f) => f(composed), arg)
 }
 
-export function logEvents(logger:{debug:Function}, key:string):Function {
-  return next => (reducer:Function, state:Object = {}) => {
-    let
-      store:Store = next(reducer, state),
-      originalDispatch = store.dispatch
-    store.dispatch = (event:{type:string}) => {
-      if (event instanceof ActionSource) {
-        return event.injectDispatcher(store.dispatch)
-      } else if (event.then) {
-        return event.then(store.dispatch, store.dispatch)
+export function localStorageCache(key:string):Function {
+  return next => (reducer:Function, initialState:Object = {}) => {
+    let content:?string = localStorage.getItem(key)
+    if (localStorage.hasOwnProperty(key) && content != null) {
+      try {
+        initialState = JSON.parse(content)
+      } catch (e) {
+
       }
-      let result = originalDispatch(event)
-      result.then(
-        data => {
-          logger.debug(
-            'Project Store Dispatched event:' + event.type,
-            event,
-            'Store data:',
-            JSON.parse(JSON.stringify(data))
-          )
-        }
-      )
-      return result
     }
+    const store = next(reducer, initialState)
+    store.listen(state => {
+      localStorage.setItem(key, JSON.stringify(state))
+    })
+    return store
   }
+}
+
+export function createStore(reducer:Function, state:Object = {}):Store {
+  return new Store({reducer, state})
 }

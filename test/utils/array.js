@@ -1,4 +1,4 @@
-import {arrayAppend, arrayPlace, arrayPrepend, arrayRemove, arrayReplace} from '../../index'
+import {arrayAppend, arrayPlace, arrayPrepend, arrayRemove, arrayReplace} from '../../src/index'
 
 describe('Utils', () => {
     describe('Array', () => {

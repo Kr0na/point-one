@@ -1,7 +1,7 @@
-require('babel/register')
 require('chai').should()
-//require('./Krux')
-require('./utils/array')
-require('./Action')
-require('./Store')
-require('./Reducer')
+import './utils/array'
+//Babel 6 is not working with decorators
+// import './utils/listen'
+import './Action'
+import './Store'
+import './Reducer'

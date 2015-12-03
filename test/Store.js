@@ -1,4 +1,4 @@
-import {createStore, Store} from '../index'
+import {createStore, Store} from '../src/index'
 
 describe('Store', () => {
     let reducer = (state, event) => {

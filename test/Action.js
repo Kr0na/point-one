@@ -1,4 +1,4 @@
-import {createPromiseAction, createMemoizeAction, createPositiveAction} from '../index'
+import {createPromiseAction, createMemoizeAction, createPositiveAction} from '../src/index'
 
 describe('Actions', () => {
   it('should work Promise Action', () => {
