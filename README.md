@@ -1,10 +1,10 @@
-# Krux - Is a simple but powerful Flux replacements
-[![Build Status](https://travis-ci.org/Kr0na/krux.svg)](https://travis-ci.org/Kr0na/krux)
+# Point One - Is a powerful implementation of Flux/Redux to start your application with easy
+[![Build Status](https://travis-ci.org/Kr0na/krux.svg)](https://travis-ci.org/Kr0na/point-one)
 ## Actions
 Action is any function that can return event or promise
 
 ```js
-import {createPromiseAction} from 'krux'
+import {createPromiseAction} from 'point-one'
 import Resource from 'path/to/resource'
 import {TODO_CREATE, TODO_LOAD} from 'path/to/constants'
 
@@ -22,7 +22,7 @@ export let createTodo = createPromiseAction(Resource.create, TODO_CREATE)
 Store is a container that can contain any data that needed for render
 
 ```js
-import {createStore} from 'krux'
+import {createStore} from 'point-one'
 import todoReducer from 'path/to/reducer'
 
 let todoStore = createStore(todoReducer)

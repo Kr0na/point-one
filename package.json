@@ -1,10 +1,10 @@
 {
-  "name": "krux",
-  "version": "0.1.0",
-  "description": "Krux - Advanced Flux/Redux",
+  "name": "point-one",
+  "version": "0.0.99",
+  "description": "Point One - Advanced Flux/Redux for React application",
   "respository": {
     "type" : "git",
-    "url" : "https://github.com/Kr0na/krux.git"
+    "url" : "https://github.com/Kr0na/point-one.git"
   },
   "main": "lib/index.js",
   "scripts": {
