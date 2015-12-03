@@ -7,16 +7,7 @@ import {doneTodo, deleteTodo} from '../actions'
 @listen(AppStore, ['todo'])
 class TodoContainer extends Component {
 
-  constructor(...options) {
-    super(...options)
-    this.state = {
-      todo: []
-    }
-    console.log(this)
-  }
-
   render() {
-    console.log(this)
     const {todo} = this.state
     return (
       <div className="container">
