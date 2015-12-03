@@ -22,34 +22,6 @@ function getCacher():{store:Function, get:Function} {
   }
 }
 
-/**
- * Changing Filtering/Ordering based on original setup event with cache for one time loaded things
- * Example:
- * Store item structure:
- *   my_item: {
- *     filter: SOME_FILTER,
- *     order: SOME_ORDER,
- *     limit: 10,
- *     items: [] //this 10 items will be used for render
-  *  }
- * @param callback
- * @param resetEventName
- * @param cacher
- * @returns {*}
- */
-export function useReselect(callback:Function, resetEventType:string = 'LOAD', cacher:{store:Function, get:Function} = getCacher()):Function {
-  let
-    loaded = false
-  return (state, event) => {
-    if (event.type == resetEventType) {
-      cacher.store(event)
-      loaded = true
-    }
-    let data = cacher.get()
-    return callback(state, event, data)
-  }
-}
-
 export function useArrayHash(callback:Function, idProperty:?string = 'id'):Function {
   let
     hasHash = false,

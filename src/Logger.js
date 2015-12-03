@@ -1,5 +1,5 @@
 /**@flow*/
-
+/* istanbul ignore next */
 export class Logger {
   logLevel:number;
 
