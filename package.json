@@ -3,14 +3,14 @@
   "version": "0.0.102",
   "description": "Point One - Advanced Flux/Redux for React application",
   "respository": {
-    "type" : "git",
-    "url" : "https://github.com/Kr0na/point-one.git"
+    "type": "git",
+    "url": "https://github.com/Kr0na/point-one.git"
   },
   "main": "lib/index.js",
   "scripts": {
     "dist": "babel -d lib/ src/",
     "prepublish": "npm run dist",
-    "test": "mocha --compilers js:babel-core/register test/index.js"
+    "test": "babel-node ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec"
   },
   "keywords": [
     "Flux",
@@ -28,6 +28,7 @@
     "babel-preset-stage-0": "^6.1.18",
     "babel-register": "^6.2.0",
     "chai": "^3.3.0",
+    "isparta": "^4.0.0",
     "mocha": "^2.3.3"
   }
 }
