@@ -1,5 +1,6 @@
 # Point One - Is a powerful implementation of Flux/Redux to start your application with easy
 [![Build Status](https://travis-ci.org/Kr0na/point-one.svg?branch=master)](https://travis-ci.org/Kr0na/point-one)
+[![codecov.io](https://codecov.io/github/Kr0na/point-one/coverage.svg?branch=master)](https://codecov.io/github/Kr0na/point-one?branch=master)
 ## Actions
 Action is any function that can return event or promise
 
