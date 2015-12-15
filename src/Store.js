@@ -1,6 +1,14 @@
 /**@flow*/
 import {register} from './EventManager'
-import {ActionSource} from './Action'
+
+declare class ActionSource {
+  injectDispatcher: Function;
+}
+
+declare class PromiseLike {
+  then:Function;
+  catch:Function;
+}
 
 export class Store {
   state: any;
@@ -33,25 +41,32 @@ export class Store {
     register(this.dispatch)
   }
 
-  dispatch(event:ActionSource|Promise|{type:String}):Promise {
+  dispatch(event:ActionSource|Promise|{type:string}):Promise {
     if (event instanceof ActionSource) {
       return event.injectDispatcher(this.dispatch)
-    } else if (event.then) {
+    } else if (event instanceof Promise || event.then) {
+      //$FlowIgnore
       return event.then(
         this.dispatch,
         this.dispatch
       )
+    } else if (event.type) {
+      return this._dispatch(event)
     } else {
-      let
-        result = this.reducer(this.state, event)
-      if (!Object.is(this.state, result)) {
-        this.state = result
-        this.trigger()
-      } else {
-        //Nothing to do. Reducer returns the same object
-      }
-      return Promise.resolve(this.state)
+      throw new Error('Wrong event')
     }
+  }
+
+  _dispatch(event:{type:string}):Promise {
+    let
+      result = this.reducer(this.state, event)
+    if (!Object.is(this.state, result)) {
+      this.state = result
+      this.trigger()
+    } else {
+      //Nothing to do. Reducer returns the same object
+    }
+    return Promise.resolve(this.state)
   }
 
   getState():any {
@@ -69,10 +84,6 @@ export class Store {
   trigger() {
     Object.keys(this.listeners).forEach(key => this.listeners[key](this.state))
   }
-}
-
-export function compose(...funcs:Array<Function>):Function {
-  return arg => funcs.reduceRight((composed, f) => f(composed), arg)
 }
 
 export function localStorageCache(key:string):Function {
