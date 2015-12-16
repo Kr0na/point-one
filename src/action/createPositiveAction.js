@@ -1,6 +1,6 @@
 /**@flow*/
 
-class ActionSource {
+export class ActionSource {
   dispatcher:?Function;
   promise:Promise;
   callEvent:Object;
@@ -34,6 +34,11 @@ class ActionSource {
   }
 }
 
+/**
+ * Promise that some async action will be resolved and trigger action just on call.
+ * Helpful for readCounters and/or some unrelevant data and we don't need details from action result
+ * If Action will be rejected it's fires Fail event
+ */
 export function createPositiveAction(handler:Function, onCall:string, onFail:string):Function {
   if (onFail == null) {
       onFail = onCall + '_FAIL'

@@ -1,14 +1,6 @@
 /**@flow*/
 import {register} from './EventManager'
-
-declare class ActionSource {
-  injectDispatcher: Function;
-}
-
-declare class PromiseLike {
-  then:Function;
-  catch:Function;
-}
+import {ActionSource} from './action/createPositiveAction'
 
 export class Store {
   state: any;
