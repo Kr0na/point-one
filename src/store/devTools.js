@@ -10,6 +10,7 @@ export function devTools(key:string):Function {
         originState = JSON.parse(JSON.stringify(store.state)),
         resultState = originalDispatch(event)
       console.groupCollapsed('Dispatch event ' + event.type + ' in ' + key)
+      console.log('Event', event)
       console.log('Original State:', originState)
       console.log('New state:', resultState)
       console.groupEnd()

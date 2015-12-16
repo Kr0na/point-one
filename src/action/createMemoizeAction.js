@@ -1,5 +1,13 @@
 /**@flow*/
 
+/**
+ * Remember Action result after first call and use it after
+ * For example:
+ *   let getSessionId = createMemoizeAction(function() {
+ *     return Math.round((Math.random() * 10000).toString(16));
+ *   })
+ * After first execution will return the same result
+ */
 export function createMemoizeAction(handler:Function):Function {
   let
     result:?Object = null,
