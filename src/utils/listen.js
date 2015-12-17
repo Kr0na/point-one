@@ -28,7 +28,11 @@ export function listen(store:{listen:Function, getState:Function}, fields:Array<
               hasChanges = true
             }
           })
-          hasChanges && this.setState(newState)
+          if (hasChanges) {
+            this.componentWillUpdateState(newState)
+            this.setState(newState)
+          }
+
         }))
       }
 

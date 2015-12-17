@@ -8,6 +8,7 @@ export {devTools} from './store/devTools'
 export {localStorageCache} from './store/localStorageCache'
 export {compose} from './utils/compose'
 export {listen} from './utils/listen'
+export {observeChange} from './utils/observeChange'
 export {
   EventManager,
   getEventManager,
