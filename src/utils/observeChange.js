@@ -28,7 +28,7 @@ export function observeChange(fields:Array<string>):Function {
         fields.forEach(key => {
           if (!Object.is(this.state[key], prevState[key])) {
             const methodName = 'on' + key.replace(/^([\w])/, _ => _.toUpperCase()) + 'Change'
-            if (this.hasOwnProperty(methodName)) {
+            if (this[methodName]) {
               this[methodName](this.state[key], prevState[key])
             }
           }
