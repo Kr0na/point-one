@@ -1,6 +1,6 @@
 /**@flow */
 
-export function listen(store:{listen:Function, getState:Function}, fields:Array<string>):Function {
+export function listen(store:{listen:Function, getState:Function}, fields:Array<string>, stateGetter:Function = (state => state)):Function {
   return (Component) => {
     return class WrappedComponent extends Component {
       constructor(...options) {
@@ -9,7 +9,7 @@ export function listen(store:{listen:Function, getState:Function}, fields:Array<
           this.state = {}
         }
         fields.forEach(key => {
-          this.state[key] = store.getState()[key]
+          this.state[key] = stateGetter(store.getState())[key]
         })
         if (!this._listeners) {
           this._listeners = []
@@ -19,6 +19,7 @@ export function listen(store:{listen:Function, getState:Function}, fields:Array<
       componentDidMount() {
         super.componentDidMount && super.componentDidMount()
         this._listeners.push(store.listen(state => {
+          state = stateGetter(state)
           let
             newState = {},
             hasChanges = false
