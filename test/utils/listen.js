@@ -11,16 +11,31 @@ describe('Utils', () => {
     })
     let store = createStore(reducer, {name: 'Alex'})
     it('should use initial state', () => {
-      @listen(store, ['name', 'foo'])
-      class Test {
+
+      let Test = listen(store, ['name', 'foo'])(class Test {
         constructor() {
 
         }
-      }
+
+        setState(state) {
+          this.state = {
+            ...this.state,
+            ...state
+          }
+        }
+      })
       const test = new Test
       test.should
         .have.property('state')
         .and.have.property('name', 'Alex')
+        test.componentDidMount()
+      store.dispatch({type: 'foo'})
+      test.should
+        .have.property('state')
+        .and.have.property('name', 'Alex')
+      test.should
+        .have.property('state')
+        .and.have.property('foo', 'foo')
     })
   })
 })

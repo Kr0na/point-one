@@ -6,6 +6,7 @@
 [include]
 
 [libs]
+interfaces/
 
 [options]
 suppress_comment=.*\\$FlowIgnore

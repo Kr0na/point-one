@@ -29,7 +29,6 @@ export function listen(store:{listen:Function, getState:Function}, fields:Array<
             }
           })
           if (hasChanges) {
-            this.componentWillUpdateState(newState)
             this.setState(newState)
           }
 
