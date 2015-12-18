@@ -8,6 +8,7 @@ export class Store {
   listeners: Object;
   index: number;
   dispatch: Function;
+  _dispatch: Function;
   getState: Function;
   listen: Function;
   trigger: Function;
@@ -27,6 +28,7 @@ export class Store {
     this.listeners = {}
     this.index = 10
     this.dispatch = this.dispatch.bind(this)
+    this._dispatch = this._dispatch.bind(this)
     this.getState = this.getState.bind(this)
     this.listen = this.listen.bind(this)
     this.trigger = this.trigger.bind(this)
