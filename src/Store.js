@@ -78,24 +78,6 @@ export class Store {
   }
 }
 
-export function localStorageCache(key:string):Function {
-  return next => (reducer:Function, initialState:Object = {}) => {
-    let content:?string = localStorage.getItem(key)
-    if (localStorage.hasOwnProperty(key) && content != null) {
-      try {
-        initialState = JSON.parse(content)
-      } catch (e) {
-
-      }
-    }
-    const store = next(reducer, initialState)
-    store.listen(state => {
-      localStorage.setItem(key, JSON.stringify(state))
-    })
-    return store
-  }
-}
-
 export function createStore(reducer:Function, state:Object = {}):Store {
   return new Store({reducer, state})
 }
