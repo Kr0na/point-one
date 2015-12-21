@@ -3,37 +3,38 @@ let sharedEventManager
 
 let managers = {}
 
-export class EventManager {
-  key:string;
-  feed:Object;
-  globals:Array<Function>;
-  dispatch:Function;
+declare class EventManager {
+  register(callback:Function):Function;
+  dispatch(event:{type:string}):{type:string};
+}
 
-  constructor(key:string) {
-    this.globals = [];
-    this.dispatch = this.dispatch.bind(this)
-  }
-
-  register(callback:Function):Function {
-    this.globals.push(callback);
+export function createEventManager():EventManager {
+  let feed = []
+  function register(callback:Function):Function {
+    feed.push(callback);
     return () => {
-      let index = this.globals.indexOf(callback);
+      let index = feed.indexOf(callback);
       if (index != -1) {
-        this.globals.splice(index, 1);
+        feed.splice(index, 1);
       }
     }
   }
 
-  dispatch(event:{type:string}):{type:string} {
-    this.globals.forEach(item => item(event))
+  function dispatch(event:{type:string}):{type:string} {
+    feed.forEach(item => item(event))
 
     return event
+  }
+
+  return {
+    register,
+    dispatch
   }
 }
 
 export function getEventManager(name:string):EventManager {
   if (!managers.hasOwnProperty(name)) {
-    managers[name] = new EventManager(name)
+    managers[name] = createEventManager()
   }
 
   return managers[name]
@@ -41,13 +42,13 @@ export function getEventManager(name:string):EventManager {
 
 export function getSharedEventManager():EventManager {
   if (!sharedEventManager) {
-    sharedEventManager = new EventManager('shared')
+    sharedEventManager = getEventManager('shared')
   }
 
   return sharedEventManager
 }
 
-export function dispatch(event:{type:string}):Promise {
+export function dispatch(event:{type:string}):{type:string} {
   return getSharedEventManager().dispatch(event)
 }
 
