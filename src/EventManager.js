@@ -10,8 +10,6 @@ export class EventManager {
   dispatch:Function;
 
   constructor(key:string) {
-    this.key = key
-    this.feed = {};
     this.globals = [];
     this.dispatch = this.dispatch.bind(this)
   }
@@ -19,74 +17,17 @@ export class EventManager {
   register(callback:Function):Function {
     this.globals.push(callback);
     return () => {
-      this.unregister(callback);
+      let index = this.globals.indexOf(callback);
+      if (index != -1) {
+        this.globals.splice(index, 1);
+      }
     }
   }
 
-  subscribe(eventName:string, callback:Function):Function {
-    if (!this.feed.hasOwnProperty(eventName)) {
-      this.feed[eventName] = [];
-    }
-    this.feed[eventName].push(callback);
+  dispatch(event:{type:string}):{type:string} {
+    this.globals.forEach(item => item(event))
 
-    return () => {
-      this.unsubscribe(eventName, callback)
-    }
-  }
-
-  /**
-   * @param eventName
-   * @param callback
-   */
-  unsubscribe(eventName:string, callback:Function) {
-    if (!this.feed[eventName]) {
-      return;
-    }
-    let index = this.feed[eventName].indexOf(callback);
-    if (index != -1) {
-      this.feed[eventName].splice(index, 1);
-    }
-  }
-
-  unregister(callback:Function) {
-    let index = this.globals.indexOf(callback);
-    if (index != -1) {
-      this.globals.splice(index, 1);
-    }
-  }
-
-  /**
-   * @param {Object|Promise} data
-   * @returns {Promise}
-   */
-  dispatch(data:Promise|{type:string}):Promise {
-    if (data.then) {
-      return data.then(this.dispatch, this.dispatch)
-    }
-    // $FlowIgnore
-    let eventName = data.type;
-
-    this.globals.forEach((item, index) => {
-      item(data)
-    });
-    if (!this.feed.hasOwnProperty(eventName)) {
-      return Promise.resolve([])
-    }
-    var listeners = [];
-    this.feed[eventName].forEach((item, index) => {
-      listeners.push(new Promise((resolve, reject) => {
-        let event = Object.create(data);
-        event.resolve = resolve;
-        event.reject = reject;
-        let result = item(event);
-        if (result != null && result.then) {
-          result.then(resolve, reject);
-        } else {
-          resolve(result || true)
-        }
-      }))
-    })
-    return Promise.all(listeners);
+    return event
   }
 }
 
