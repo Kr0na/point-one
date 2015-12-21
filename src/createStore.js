@@ -8,7 +8,7 @@ declare class Store {
   dispatch(event:{type:string}):Object;
 }
 
-export const POINT_INIT = 'point/INIT'
+export const POINT_INIT = '@@point/INIT'
 
 export function createStore(reducer:Function, state:any = {}):Store {
   if (!reducer instanceof Function) {
@@ -40,7 +40,7 @@ export function createStore(reducer:Function, state:any = {}):Store {
     if (event instanceof Function) {
       return event(dispatch, getState)
     } else if (!isPlainObject(event)) {
-      throw new Error('event must be a Plain Object Maybe you forgot to compose createStore with some dispatch extender?')
+      throw new Error('event must be a Plain Object or Function. Maybe you forgot to compose createStore with some dispatch extender?')
     }
     let
       result = currentReducer(currentState, event)
@@ -52,7 +52,10 @@ export function createStore(reducer:Function, state:any = {}):Store {
     return event
   }
 
+  //Register store to global dispatcher
   register(dispatch)
+
+  dispatch({type: POINT_INIT})
 
   return {
     getState,

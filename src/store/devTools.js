@@ -2,14 +2,21 @@
 
 export function devTools(name:string):Function {
   return ({dispatch, getState}) => next => event => {
-    const
-      initialState = getState(),
-      result = next(event),
-      finalState = getState()
-    console.groupCollapsed('Dispatch event ' + event.type + ' in ' + name)
-    console.log('Original State:', initialState)
-    console.log('New state:', finalState)
-    console.groupEnd()
-    return result
+    const execute = data => {
+      const
+        initialState = getState(),
+        result = next(data),
+        finalState = getState()
+      console.groupCollapsed('Dispatch event ' + event.type + ' in ' + name)
+      console.log('Original State:', initialState)
+      console.log('New state:', finalState)
+      console.groupEnd()
+      return result
+    }
+    if (event instanceof Function) {
+      return event(execute, getState)
+    } else {
+      return execute(event)
+    }
   }
 }
