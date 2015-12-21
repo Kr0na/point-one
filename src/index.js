@@ -11,7 +11,7 @@ export {useDispatchers} from './utils/useDispatchers'
 export {listen} from './utils/listen'
 export {observeChange} from './utils/observeChange'
 export {
-  EventManager,
+  createEventManager,
   getEventManager,
   getSharedEventManager,
   dispatch,
