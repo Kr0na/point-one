@@ -37,7 +37,9 @@ export function createStore(reducer:Function, state:any = {}):Store {
   }
 
   function dispatch(event:{type:string}):{type:string} {
-    if (!isPlainObject(event)) {
+    if (event instanceof Function) {
+      return event(dispatch, getState)
+    } else if (!isPlainObject(event)) {
       throw new Error('event must be a Plain Object Maybe you forgot to compose createStore with some dispatch extender?')
     }
     let

@@ -19,7 +19,7 @@ describe('store', () => {
 
     it('should call method', () => {
         let
-            instance = compose(useDispatchers(asyncDispatcher))(createStore)(reducer),
+            instance = createStore(reducer),
             promises = []
 
         promises.push(new Promise((resolve, reject) => {
