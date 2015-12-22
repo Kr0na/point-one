@@ -36,7 +36,7 @@ export function listen(store:{listen:Function, getState:Function}, fields:Array<
         }))
       }
 
-      componentWillUnmout() {
+      componentWillUnmount() {
         super.componentWillUnmout && super.componentWillUnmout()
         this._listeners.forEach(listener => listener())
       }

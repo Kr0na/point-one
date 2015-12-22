@@ -36,7 +36,7 @@ describe('Utils', () => {
       test.should
         .have.property('state')
         .and.have.property('foo', 'foo')
-      test.componentWillUnmout()
+      test.componentWillUnmount()
       store.dispatch({type: 'bar'})
     test.should
       .have.property('state')
