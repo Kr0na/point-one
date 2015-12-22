@@ -1,4 +1,4 @@
-import {createStore, Store} from '../src/index'
+import {createStore} from '../src/index'
 
 describe('Store', () => {
     let reducer = (state, event) => {
@@ -15,29 +15,21 @@ describe('Store', () => {
                 return state
         }
     }
-    it('should create new instance', () => {
-        let instance = createStore(() => {
-
-        })
-        instance.should
-            .be.instanceOf(Store)
-            .and.have.property('state')
-    })
     it('should change state correctly', () => {
         let instance = createStore(reducer)
         instance.dispatch({
             type: 'foo'
         })
-        instance.state.should
+        instance.getState().should
             .have.property('foo', 'bar')
-        instance.state.should
+        instance.getState().should
             .not.have.property('bar')
         instance.dispatch({
             type: 'bar'
         })
-        instance.state.should
+        instance.getState().should
             .have.property('bar', 'foo')
-        instance.state.should
+        instance.getState().should
             .not.have.property('foo')
     })
     it('should trigger listeners', () => {
@@ -45,7 +37,7 @@ describe('Store', () => {
             instance = createStore(reducer),
             calledFoo = false,
             calledBar = false,
-            unsubscribe = instance.listen((state) => {
+            unsubscribe = instance.listen(state => {
                 if (!calledFoo) {
                     state.should
                         .have.property('foo', 'bar')
@@ -77,38 +69,38 @@ describe('Store', () => {
             type: 'nothing'
         })
     })
-    it('should listen to promise', () => {
-        let
-            instance = createStore(reducer),
-            promises = []
-
-        promises.push(new Promise((resolve, reject) => {
-            let unsubscribe = instance.listen((state) => {
-                state.should
-                    .have.property('foo', 'bar')
-                state.should
-                    .not.have.property('bar')
-                unsubscribe()
-                resolve()
-            })
-            instance.dispatch(Promise.resolve({
-                type: 'foo'
-            }))
-        }))
-        promises.push(new Promise((resolve, reject) => {
-            let unsubscribe = instance.listen((state) => {
-                state.should
-                    .have.property('bar', 'foo')
-                state.should
-                    .not.have.property('foo')
-                unsubscribe()
-                resolve()
-            })
-            instance.dispatch(Promise.reject({
-                type: 'bar'
-            }))
-        }))
-
-        return Promise.all(promises)
-    })
+    // it('should listen to promise', () => {
+    //     let
+    //         instance = createStore(reducer),
+    //         promises = []
+    //
+    //     promises.push(new Promise((resolve, reject) => {
+    //         let unsubscribe = instance.listen((state) => {
+    //             state.should
+    //                 .have.property('foo', 'bar')
+    //             state.should
+    //                 .not.have.property('bar')
+    //             unsubscribe()
+    //             resolve()
+    //         })
+    //         instance.dispatch(Promise.resolve({
+    //             type: 'foo'
+    //         }))
+    //     }))
+    //     promises.push(new Promise((resolve, reject) => {
+    //         let unsubscribe = instance.listen((state) => {
+    //             state.should
+    //                 .have.property('bar', 'foo')
+    //             state.should
+    //                 .not.have.property('foo')
+    //             unsubscribe()
+    //             resolve()
+    //         })
+    //         instance.dispatch(Promise.reject({
+    //             type: 'bar'
+    //         }))
+    //     }))
+    //
+    //     return Promise.all(promises)
+    // })
 })

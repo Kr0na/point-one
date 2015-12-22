@@ -14,26 +14,31 @@ export function createMemoizeAction(handler:Function):Function {
     promise:?Promise = null
 
     return (...props) => {
-      if (result) {
+      if (result != null) {
         return result
-      } else if (promise) {
-        return promise
+      } else if (promise != null) {
+        //$FlowIgnore
+        return dispatch => promise.then(dispatch, dispatch)
       } else {
         let event = handler(...props)
         if (event.then) {
           promise = event
-          event.then(
-            data => {
-              result = data
-              //Remove link to promise to prevent Memory leak
-              promise = null
-            },
-            err => {
-              result = err
-              //Remove link to promise to prevent Memory leak
-              promise = null
-            }
-          )
+          //$FlowIgnore
+          return dispatch => promise
+            .then(
+              data => {
+                result = data
+                //Remove link to promise to prevent Memory leak
+                promise = null
+                dispatch(result)
+              },
+              err => {
+                result = err
+                //Remove link to promise to prevent Memory leak
+                promise = null
+                dispatch(result)
+              }
+            )
         } else {
           result = event
         }

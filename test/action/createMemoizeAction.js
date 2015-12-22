@@ -1,4 +1,4 @@
-import {createMemoizeAction} from '../../src/index'
+import {createMemoizeAction, createStore, concatReducers, concatEventReducers} from '../../src/index'
 
 describe('Actions', () => {
   describe('Memoize', () => {
@@ -28,13 +28,12 @@ describe('Actions', () => {
           callCounter++
           return promise
         })
-        let result = action()
-        result.should.be.instanceOf(Promise)
+        let result = action()(e => e)
+        // result.should.be.instanceOf(Function)
         return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            //After promise is fullfilled action will returns needed data w/t promise
-            result = action()
-            result.should.have.property('type', 'SOME')
+          //After promise is fullfilled action will returns needed data w/t promise
+          action()(event => {
+            event.should.have.property('type', 'SOME')
             callCounter.should.equal(1)
             resolve()
           })

@@ -1,22 +1,22 @@
 /**@flow*/
 
-export function devTools(key:string):Function {
-  return next => (reducer:Function, initialState:Object = {}) => {
-    let
-      store = next(reducer, initialState),
-      originalDispatch = store._dispatch
-    store._dispatch = event => {
+export function devTools(name:string):Function {
+  return ({dispatch, getState}) => next => event => {
+    const execute = data => {
       const
-        originState = JSON.parse(JSON.stringify(store.state)),
-        resultState = originalDispatch(event)
-      resultState.then(state => {
-        console.groupCollapsed('Dispatch event ' + event.type + ' in ' + key)
-        console.log('Original State:', originState)
-        console.log('New state:', state)
-        console.groupEnd()
-      })
-      return resultState
+        initialState = getState(),
+        result = next(data),
+        finalState = getState()
+      console.groupCollapsed('Dispatch event ' + event.type + ' in ' + name)
+      console.log('Original State:', initialState)
+      console.log('New state:', finalState)
+      console.groupEnd()
+      return result
     }
-    return store
+    if (event instanceof Function) {
+      return event(execute, getState)
+    } else {
+      return execute(event)
+    }
   }
 }

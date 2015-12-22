@@ -7,23 +7,17 @@ export {concatReducers} from './reducer/concatReducers'
 export {devTools} from './store/devTools'
 export {localStorageCache} from './store/localStorageCache'
 export {compose} from './utils/compose'
+export {useDispatchers} from './utils/useDispatchers'
 export {listen} from './utils/listen'
 export {observeChange} from './utils/observeChange'
 export {
-  EventManager,
+  createEventManager,
   getEventManager,
   getSharedEventManager,
   dispatch,
   register
 } from './EventManager'
-export {
-  Logger,
-  getLogger
-} from './Logger'
-export {
-  Store,
-  createStore
-} from './Store'
+export {createStore} from './createStore'
 export {
   arrayRemove,
   arrayReplace,

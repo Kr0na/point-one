@@ -3,96 +3,38 @@ let sharedEventManager
 
 let managers = {}
 
-export class EventManager {
-  key:string;
-  feed:Object;
-  globals:Array<Function>;
-  dispatch:Function;
+declare class EventManager {
+  register(callback:Function):Function;
+  dispatch(event:{type:string}):{type:string};
+}
 
-  constructor(key:string) {
-    this.key = key
-    this.feed = {};
-    this.globals = [];
-    this.dispatch = this.dispatch.bind(this)
-  }
-
-  register(callback:Function):Function {
-    this.globals.push(callback);
+export function createEventManager():EventManager {
+  let feed = []
+  function register(callback:Function):Function {
+    feed.push(callback);
     return () => {
-      this.unregister(callback);
+      let index = feed.indexOf(callback);
+      if (index != -1) {
+        feed.splice(index, 1);
+      }
     }
   }
 
-  subscribe(eventName:string, callback:Function):Function {
-    if (!this.feed.hasOwnProperty(eventName)) {
-      this.feed[eventName] = [];
-    }
-    this.feed[eventName].push(callback);
+  function dispatch(event:{type:string}):{type:string} {
+    feed.forEach(item => item(event))
 
-    return () => {
-      this.unsubscribe(eventName, callback)
-    }
+    return event
   }
 
-  /**
-   * @param eventName
-   * @param callback
-   */
-  unsubscribe(eventName:string, callback:Function) {
-    if (!this.feed[eventName]) {
-      return;
-    }
-    let index = this.feed[eventName].indexOf(callback);
-    if (index != -1) {
-      this.feed[eventName].splice(index, 1);
-    }
-  }
-
-  unregister(callback:Function) {
-    let index = this.globals.indexOf(callback);
-    if (index != -1) {
-      this.globals.splice(index, 1);
-    }
-  }
-
-  /**
-   * @param {Object|Promise} data
-   * @returns {Promise}
-   */
-  dispatch(data:Promise|{type:string}):Promise {
-    if (data.then) {
-      return data.then(this.dispatch, this.dispatch)
-    }
-    // $FlowIgnore
-    let eventName = data.type;
-
-    this.globals.forEach((item, index) => {
-      item(data)
-    });
-    if (!this.feed.hasOwnProperty(eventName)) {
-      return Promise.resolve([])
-    }
-    var listeners = [];
-    this.feed[eventName].forEach((item, index) => {
-      listeners.push(new Promise((resolve, reject) => {
-        let event = Object.create(data);
-        event.resolve = resolve;
-        event.reject = reject;
-        let result = item(event);
-        if (result != null && result.then) {
-          result.then(resolve, reject);
-        } else {
-          resolve(result || true)
-        }
-      }))
-    })
-    return Promise.all(listeners);
+  return {
+    register,
+    dispatch
   }
 }
 
 export function getEventManager(name:string):EventManager {
   if (!managers.hasOwnProperty(name)) {
-    managers[name] = new EventManager(name)
+    managers[name] = createEventManager()
   }
 
   return managers[name]
@@ -100,13 +42,13 @@ export function getEventManager(name:string):EventManager {
 
 export function getSharedEventManager():EventManager {
   if (!sharedEventManager) {
-    sharedEventManager = new EventManager('shared')
+    sharedEventManager = getEventManager('shared')
   }
 
   return sharedEventManager
 }
 
-export function dispatch(event:{type:string}):Promise {
+export function dispatch(event:{type:string}):{type:string} {
   return getSharedEventManager().dispatch(event)
 }
 

@@ -13,17 +13,17 @@ export function createPromiseAction(handler:Function, onSuccess:string, onFail:?
     if (!onFail) {
         onFail = onSuccess + '_FAIL'
     }
-    return (...props) => {
-        return handler(...props)
-            .then(
-                data => ({
-                    ...data,
-                    type: onSuccess
-                }),
-                err => ({
-                    ...err,
-                    type: onFail
-                })
-            )
-    }
+
+    return (...props) => dispatch => handler(...props)
+      .then(
+          data => (dispatch({
+              ...data,
+              type: onSuccess
+          })),
+          err => (dispatch({
+              ...err,
+              type: onFail
+          }))
+      )
+
 }

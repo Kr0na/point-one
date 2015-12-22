@@ -5,7 +5,7 @@ describe('Actions', () => {
     describe('Positive Actions', () => {
       it('should send event before promise resolved', () => {
         let
-          resolve = null,
+          resolve = false,
           reject = null,
           resolved = false,
           callCounter = 0,
@@ -18,19 +18,18 @@ describe('Actions', () => {
           dispatcher = (event) => {
             callCounter++
             resolved.should.be.false
-            resolve.should.be.instanceOf(Function)
+            resolve.should.be.false
             event.should.have.property('id', 5)
             event.should.have.property('type', 'SOME_ACTION')
           },
-          source = action({id: 5})
-        source.injectDispatcher(dispatcher)
+          source = action({id: 5})(dispatcher)
         callCounter.should.be.equal(1)
         resolve({id: 6})
         callCounter.should.be.equal(1)
       })
       it('should send event after promise rejeted', () => {
         let
-          resolve = null,
+          resolve = false,
           reject = null,
           resolved = false,
           callCounter = 0,
@@ -44,7 +43,7 @@ describe('Actions', () => {
             callCounter++
             if (callCounter == 1) {
               resolved.should.be.false
-              resolve.should.be.instanceOf(Function)
+              resolve.should.be.false
               event.should.have.property('id', 5)
               event.should.have.property('type', 'SOME_ACTION')
             } else if (callCounter == 2) {
@@ -53,8 +52,7 @@ describe('Actions', () => {
               event.should.have.property('type', 'SOME_ACTION_FAIL')
             }
           },
-          source = action({id: 5})
-        source.injectDispatcher(dispatcher)
+          source = action({id: 5})(dispatcher)
         callCounter.should.be.equal(1)
         reject({message: 'text'})
         return new Promise(res => {
