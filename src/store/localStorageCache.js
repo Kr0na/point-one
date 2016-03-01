@@ -1,7 +1,7 @@
 /**@flow*/
 
 export function localStorageCache(name:string, fields:Array<string> = []):Function {
-  return next => (reducer:Function, initialState:Object = {}) => {
+  return next => (reducer:Function, initialState:Object = {}, extenders:?Function) => {
     let content:?string = localStorage.getItem(name)
     if (localStorage.hasOwnProperty(name) && content != null) {
       try {
@@ -13,7 +13,7 @@ export function localStorageCache(name:string, fields:Array<string> = []):Functi
 
       }
     }
-    const store = next(reducer, initialState)
+    const store = next(reducer, initialState, extenders)
     store.listen(state => {
       if (fields.length) {
         const data = fields.reduce((st, key) => {

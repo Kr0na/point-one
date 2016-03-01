@@ -10,7 +10,12 @@ declare class Store {
 
 export const POINT_INIT = '@@point/INIT'
 
-export function createStore(reducer:Function, state:any = {}):Store {
+export function createStore(reducer:Function, state:any = {}, extenders:?Function):Store {
+  //Add ability to use extenders
+  if (extenders instanceof Function) {
+    return extenders(createStore)(reducer, state)
+  }
+
   if (!reducer instanceof Function) {
     throw new Error('Reducer must be a function')
   }
@@ -37,6 +42,7 @@ export function createStore(reducer:Function, state:any = {}):Store {
   }
 
   function dispatch(event:{type:string}):{type:string} {
+    //Thunk functionallity
     if (event instanceof Function) {
       return event(dispatch, getState)
     } else if (!isPlainObject(event)) {
@@ -60,6 +66,15 @@ export function createStore(reducer:Function, state:any = {}):Store {
   return {
     getState,
     listen,
-    dispatch
+    dispatch,
+    //While using dangerous actions user must understand what he want to do
+    dangerously: {
+      replaceReducer(reducer:Function, safe:bool = false) {
+        if (!safe) {
+          console.warn('Unsafe replacing reducer. Please check that replacing reducer is really needed')
+        }
+        currentReducer = reducer
+      }
+    }
   }
 }
