@@ -29,4 +29,18 @@ describe('Reducer', () => {
     obj.should
         .be.equal(state)
   })
+  it('should init with initialState', () => {
+    const
+      eventReducers = concatEventReducers({
+        foo: () => 'foo',
+        bar: () => 'bar',
+        initialState: 'foobar'
+      }),
+      reducer = concatReducers({
+        foo: eventReducers
+      }),
+      state = {name: 'Alex'}
+    let obj = reducer(state, {type: 'aasdfdas'})
+    obj.should.have.property('foo', 'foobar')
+  })
 })
