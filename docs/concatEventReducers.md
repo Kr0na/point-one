@@ -2,44 +2,28 @@
 
 concatEventReducers is used for compose reducers for some field by event
 
-```js
-{
-  title: 'Some Page',
-  identity: {
-    id: 0,
-    login: 'Some'
-  },
-  users: [{id: 0, ...}],
-  some: {},
-  foo: {}
-}
-```
-
-Typically you can make something like:
+Typically you can make something like this for field event:
 ```js
 function reducer(event, state) {
   switch(event.type) {
-    case 'CHANGE_TITLE':
-      return {
-        ...state,
-        title: event.title
-      }
     case 'LOGIN':
+      return event.data
+    case 'LOGOUT':
+      return null
+    case 'UPDATE_PROFILE':
       return {
         ...state,
-        identity: event.data
+        ...event.data
       }
-    case 'SOME':
-      return {
-        ...state,
-        some: event.data
-      }
-    //....
+    case 'FOO':
+      //...
+    default:
+      return state
   }
 }
 ```
+This is simple reducer, but when you can some logic for each event type in result you have more than 200 lines of code for single reducer
 
-But can you imagine something like this in real project? Imagine some event that can change some inner object. Looks not good?
 
 concatReducers add ability to work with each field independent. With own events
 
