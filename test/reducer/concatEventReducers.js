@@ -33,9 +33,8 @@ describe('Reducer', () => {
     const
       eventReducers = concatEventReducers({
         foo: () => 'foo',
-        bar: () => 'bar',
-        initialState: 'foobar'
-      }),
+        bar: () => 'bar'
+      }, 'foobar'),
       reducer = concatReducers({
         foo: eventReducers
       }),
