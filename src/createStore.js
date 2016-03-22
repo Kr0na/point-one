@@ -74,6 +74,7 @@ export function createStore(reducer:Function, state:any = {}, extenders:?Functio
           console.warn('Unsafe replacing reducer. Please check that replacing reducer is really needed')
         }
         currentReducer = reducer
+        dispatch({type: POINT_INIT})
       }
     }
   }
