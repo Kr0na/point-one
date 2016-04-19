@@ -1,6 +1,6 @@
 /**@flow*/
 export function concatReducers(reducers:Object):Function {
-  return (state, event:{type:string}) => {
+  return (state = {}, event:{type:string}) => {
     let hasChanges = false
     const newState = Object.keys(reducers).reduce(
       (rawState, key) => {
