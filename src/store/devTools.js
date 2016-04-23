@@ -1,5 +1,6 @@
 /**@flow*/
 
+/*istanbul ignore next*/
 export function devTools(name:string):Function {
   return ({dispatch, getState}) => next => event => {
     const execute = data => {
