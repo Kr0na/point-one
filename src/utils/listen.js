@@ -1,6 +1,7 @@
 /**@flow */
 
 function makeWrapper(providedStore:?{listen:Function, dispatch: Function, getState: Function} = null, stateGetter:Function): Function {
+  const name = 'store' + parseInt("" + Math.random() * 1000)
   return Component => class WrappedComponent extends Component {
     static contextTypes = {
       store: ({store}) => {
@@ -21,12 +22,12 @@ function makeWrapper(providedStore:?{listen:Function, dispatch: Function, getSta
       if (!this.state) {
         this.state = {}
       }
-      this.store = providedStore || context.store
-      const _storeState = stateGetter(this.store.getState())
+      this[name] = providedStore || context.store
+      const _storeState = stateGetter(this[name].getState())
       this.state = {
         ...this.state,
         ..._storeState,
-        _storeState
+        [name]:_storeState
       }
       if (!this._listeners) {
         this._listeners = []
@@ -35,9 +36,9 @@ function makeWrapper(providedStore:?{listen:Function, dispatch: Function, getSta
 
     componentDidMount() {
       super.componentDidMount && super.componentDidMount()
-      this._listeners.push(this.store.listen(state => {
+      this._listeners.push(this[name].listen(state => {
         state = stateGetter(state)
-        if (this.state._storeState !== state) {
+        if (this.state[name] !== state) {
           this.setState(state)
         }
       }))
