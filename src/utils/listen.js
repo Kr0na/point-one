@@ -1,4 +1,5 @@
 /**@flow */
+import {makeFieldsGetter} from './makeFieldsGetter'
 
 function makeWrapper(providedStore:?{listen:Function, dispatch: Function, getState: Function} = null, stateGetter:Function): Function {
   const name = 'store' + parseInt("" + Math.random() * 1000)
@@ -38,8 +39,13 @@ function makeWrapper(providedStore:?{listen:Function, dispatch: Function, getSta
       super.componentDidMount && super.componentDidMount()
       this._listeners.push(this[name].listen(state => {
         state = stateGetter(state)
-        if (this.state[name] !== state) {
-          this.setState(state)
+        if (
+          this.state[name] !== state
+        ) {
+          //Optimization to prevent Component rerender when using makeFieldsGetter
+          const hasChanges = Object.keys(state).length != Object.keys(this.state[name]).length
+            || Object.keys(state).reduce((result, key) => result || Object.is(state[key], this.state[name][key]), false)
+          hasChanges && this.setState(state)
         }
       }))
     }
@@ -55,15 +61,12 @@ function makeWrapper(providedStore:?{listen:Function, dispatch: Function, getSta
 export function listen(store:{listen:Function, dispatch:Function, getState:Function}|Function, stateGetter:Function = (state => state), deprecatedArg:?Function):Function {
   if (Array.isArray(stateGetter)) {
     if (process.env.NODE_ENV !== 'production') {
-      console.warn('fields argument is deprecated and will be removed in next versions. Please change your code to use stateGetter')
+      console.warn('fields argument is deprecated and will be removed in next versions. Please change your code to use makeFieldsGetter() if you want')
     }
     const fields = [...stateGetter]
     stateGetter = state => {
       state = deprecatedArg && deprecatedArg(state) || state
-      return fields.reduce((target, key) => ({
-        ...target,
-        [key]: state[key]
-      }), {})
+      return makeFieldsGetter(fields)(state)
     }
   }
   if (store instanceof Function) {

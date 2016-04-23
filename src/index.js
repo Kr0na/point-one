@@ -9,6 +9,7 @@ export {localStorageCache} from './store/localStorageCache'
 export {compose} from './utils/compose'
 export {useDispatchers} from './utils/useDispatchers'
 export {listen} from './utils/listen'
+export {makeFieldsGetter} from './utils/makeFieldsGetter'
 export {observeChange} from './utils/observeChange'
 export {
   createEventManager,
