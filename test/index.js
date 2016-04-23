@@ -1,6 +1,7 @@
 require('chai').should()
 import './action/createMemoizeAction'
 import './action/createPositiveAction'
+import './action/createPromiseAction'
 import './reducer/concatEventReducers'
 import './reducer/concatReducers'
 import './utils/array'
