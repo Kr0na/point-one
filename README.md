@@ -2,6 +2,87 @@
 [![Build Status](https://travis-ci.org/Kr0na/point-one.svg?branch=master)](https://travis-ci.org/Kr0na/point-one)
 [![codecov.io](https://codecov.io/github/Kr0na/point-one/coverage.svg?branch=master)](https://codecov.io/github/Kr0na/point-one?branch=master)
 
+point-one is an state container for any kind of application. It can be used on client and server sides.
+It's built with a lot of ready to use helpers and extenders.
+
+## Installation
+
+```
+npm install point-one --save
+```
+
+## Stores
+>point-one not require to use only one store for application but for comfortable development please make independent stores only when you have some big scopes with a lot of reducers that can decrease performance of application
+
+```js
+import {createStore, concatReducers, concatEventReducers} from 'point-one'
+/**
+ * this reducer provide structure and default values:
+ * {
+ *   auth: {
+ *     authenticated: false,
+ *     error: false,
+ *     identity: null
+ *   },
+ *   notifications: {
+ *     counter: 0
+ *   }
+ * }
+ */
+const reducer = concatReducers({
+  auth: concatReducers({
+    authenticated: concatEventReducers({
+      'AUTH_SUCCESS': () => true,
+      'AUTH_LOGOUT': () => false
+    }, false),
+    error: concatEventReducers({
+      'AUTH_FAIL': (state, {data}) => data.message,
+      'AUTH_SUCCESS': () => false
+    }, false),
+    identity: concatEventReducers({
+      'AUTH_SUCCESS': (state, {data}) => data,
+      'USER_UPDATE': (state, {data}) => ({...state, ...data}),
+      'AUTH_LOGOUT': () => null
+    }, null)
+  }),
+  notifications: concatReducers({
+    counter: concatEventReducers({
+      'RECEIVE_NOTIFICATION': state => state + 1,
+      'AUTH_SUCCESS': (state, {data: {notifications}}) => notifications.length,
+      'READ_NOTIFICATION': state => state - 1,
+      'AUTH_LOGOUT': () => 0
+    }, 0)
+  })
+})
+
+const store = createStore(reducer)
+store.listen(state => console.log('This will be triggered when something was changed in store', state))
+//getState will return current state of store
+console.log(store.getState())
+//We dispatch event with type 'AUTH_SUCCESS' and some data. type field is required
+store.dispatch({
+  type: 'AUTH_SUCCESS',
+  data: {
+    id: 0,
+    email: 'some',
+    notifications: []
+  }
+})
+```
+
+This is not real-world example but as you can see, we make a lot of work with authentication and even with notifications.
+So when something dispatch authentication event 'AUTH_SUCCESS' we anytime know what part of our store will change, and also
+we understand how it should be.
+
+In example code we use two helpers from point-one: `concatReducers` and `concatEventReducers`:
+
+`concatReducers` - is useful to make independent reducers for each field inside object So your reducers will be more readable
+
+`concatEventReducers` - is useful to make more readable reducers for field to see event => action without a lot of code inside switch-cases
+
+### Thunk
+point-one store have built-in thunk functionality but if you use any of extenders please attach thunk dispatcher to not write strange checks for event as a function that repeats thunk.
+
 ## Actions
 Actions is a simple function that produce some event that can be used for dispatching.
 Event must be a plain object and contains type variable or be a function that will
@@ -48,59 +129,55 @@ someState = counterReducer(someState, {type:'decrease'})//0
 someState = counterReducer(someState, {type:'another'})//0
 ```
 
-For store purposes you can use our helpers: concatReducers and concatEventReducers:
-```js
-concatReducers(reducers:Object):Function
-```
-Arguments:
-- reducers - an object with key - field name in state, value - function reducer
+## Built-in utils
+
+### listen
+
+listen is an decorator for React Components that will provide some data from store to your Component state
 
 ```js
-concatEventReducers(reducers:Object):Function
-```
-Arguments:
-- reducers - an object with key - event type and value - function reducer for event
+import React, {Component} from 'react'
+import AppStore, {dispatch} from './AppStore'
+import {authenticate} from './actions'
+import {listen} from 'point-one'
 
-Example of usage:
-```js
-const counter = concatEventReducers({
-  'INCREASE': state => state + 1,
-  'DECREASE': state => state - 1,
-  'RESET': () => 10
-})
-const name = concatEventReducers({
-  'MAKE_UPPER': state => state.toUpperCase(),
-  'MAKE_LOWER': state => state.toLowerCase(),
-  'SET_NAME': (state, event) => event.name
-  'RESET': () => 'John Doe'
-})
-const reducer = concatReducers({
-  counter,
-  name
-})
-let state = {
-  counter: 10,
-  name: 'John Doe'
+@listen(AppStore, state => state.auth)
+class LoginForm extends Component {
+
+  onLogin(e) {
+    e.preventDefault()
+    dispatch(authenticate({
+      login: this.refs.login.value,
+      password: this.refs.password.value
+    }))
+  }
+
+  render() {
+    if (this.state.authenticated) {
+      return (
+        <div>
+          You are already authenticated
+        </div>
+      )
+    }
+    return (
+      <form className="login-form" onSubmit={e => this.onLogin(e)}>
+        <div className="form-error" hidden={!!this.state.error}>
+          {this.state.error}
+        </div>
+        ...fields
+      </form>
+    )
+  }
 }
-state = reducer(state, {type: 'INCREASE'})//Will increase counter
-state = reducer(state, {type: 'MAKE_UPPER'})//Name will be 'JOHN DOE'
-state = reducer(state, {type: 'RESET'})//Will reset state to original state
 ```
 
-## Stores
-Store is a container that can contain any data
+This is really simple component but as you can see you don't need to write code for sync state between store and component
 
-For demo just use reducer and initialState from previous example
+Syntax:
+
 ```js
-import {createStore} from 'point-one'
-
-let todoStore = createStore(reducer, state)
-todoStore.dispatch({type: 'INCREASE'})
-todoStore.dispatch({type: 'MAKE_UPPER'})
-todoStore.dispatch({type: 'RESET'})
+listen(Store, stateGetter:?Function = state => state)
+//or it can get store form context if you provide store field
+listen(stateGetter:?Function = state => state)
 ```
-
-## Todo
-3. add tests for EventManager
-4. make docs
-5. make examples

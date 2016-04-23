@@ -69,8 +69,8 @@ export function listen(store:{listen:Function, dispatch:Function, getState:Funct
       return makeFieldsGetter(fields)(state)
     }
   }
-  if (store instanceof Function) {
-    return makeWrapper(null, stateGetter)
+  if (store instanceof Function || !store) {
+    return makeWrapper(null, store)
   } else {
     return makeWrapper(store, stateGetter)
   }
