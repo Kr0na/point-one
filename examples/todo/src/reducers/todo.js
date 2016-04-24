@@ -2,7 +2,7 @@ import {concatEventReducers, arrayAppend, arrayReplace, arrayRemove} from 'point
 import {TODO_CREATE, TODO_DONE, TODO_DELETE, TODO_UPDATE} from '../constants'
 
 function createTodo(state, event) {
-  const todo = {id: state.length, ...event}
+  const todo = {id: parseInt("" + Math.random() * 1000), ...event}
   return arrayAppend(state, todo)
 }
 
@@ -23,7 +23,6 @@ function doneTodo(state, event) {
 function deleteTodo(state, event) {
   const
     todoIndex = state.findIndex(item => item.id == event.id)
-    console.log(todoIndex, state, event)
   return arrayRemove(state, todoIndex)
 }
 
@@ -46,4 +45,4 @@ export let todo = concatEventReducers({
   [TODO_DONE]: doneTodo,
   [TODO_DELETE]: deleteTodo,
   [TODO_UPDATE]: updateTodo
-})
+}, [])

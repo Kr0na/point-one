@@ -3,19 +3,15 @@ import React, {Component} from 'react'
 export default class TodoItem extends Component {
 
   render() {
-    const {value} = this.props
+    const {value, status} = this.props
     return (
-      <div className="row">
-        <div className="col-xs-8">
-          {value}
+      <li className={status == 'done' ? 'completed': ''}>
+        <div className="view">
+          <input className="toggle" checked={status == 'done'} type="checkbox" onChange={this.props.onDone}/>
+          <label>{value}</label>
+          <button className="destroy" onClick={this.props.onDelete}></button>
         </div>
-        <div className="col-xs-2">
-          <button className="btn btn-xs" onClick={this.props.onDone}>Done</button>
-        </div>
-        <div className="col-xs-2">
-          <button className="btn btn-xs" onClick={this.props.onDelete}>Delete</button>
-        </div>
-      </div>
+      </li>
     )
   }
 }
