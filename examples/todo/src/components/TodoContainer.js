@@ -1,4 +1,3 @@
-/**@flow*/
 import React, {Component} from 'react'
 import {listen} from 'point-one'
 import {AppStore, dispatch} from '../AppStore'

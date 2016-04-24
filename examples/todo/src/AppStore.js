@@ -1,4 +1,3 @@
-/**@flow*/
 import {createStore, concatReducers, compose, useDispatchers, devTools, localStorageCache} from 'point-one'
 import {todo} from './reducers/todo'
 
