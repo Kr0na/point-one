@@ -4,7 +4,7 @@ import {AppStore, dispatch} from '../AppStore'
 import TodoItem from './TodoItem'
 import {doneTodo, deleteTodo, createTodo} from '../actions'
 
-@listen(AppStore)
+@listen()
 class TodoContainer extends Component {
 
   createTodo(e) {
