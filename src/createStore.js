@@ -10,7 +10,11 @@ declare type Store = {
 
 export const POINT_INIT = '@@point/INIT'
 
-export function createStore(reducer:Function, state:any = {}, extenders:?Function):Store {
+export function createStore(reducer:Function, state:any, extenders:?Function):Store {
+  if (typeof state === 'function' && typeof extenders === 'undefined') {
+    extenders = state
+    state = undefined
+  }
   //Add ability to use extenders
   if (extenders instanceof Function) {
     return extenders(createStore)(reducer, state)

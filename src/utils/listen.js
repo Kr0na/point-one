@@ -45,7 +45,10 @@ function makeWrapper(providedStore:?{listen:Function, dispatch: Function, getSta
           //Optimization to prevent Component rerender when using makeFieldsGetter
           const hasChanges = Object.keys(state).length != Object.keys(this.state[name]).length
             || Object.keys(state).reduce((result, key) => result || !Object.is(state[key], this.state[name][key]), false)
-          hasChanges && this.setState(state)
+          hasChanges && this.setState({
+            ...state,
+            [name]: state
+          })
         }
       }))
     }

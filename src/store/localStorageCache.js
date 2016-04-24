@@ -15,7 +15,8 @@ export function localStorageCache(name:string, fields:Array<string> = []):Functi
       }
     }
     const store = next(reducer, initialState, extenders)
-    store.listen(state => {
+    store.listen(() => {
+      const state = store.getState()
       if (fields.length) {
         const data = fields.reduce((st, key) => {
           st[key] = state[key]

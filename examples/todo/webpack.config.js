@@ -24,6 +24,7 @@ module.exports = {
   },
   resolve: {
     alias: {
+      'point-one/lib': __dirname + '/../../lib/',
       'point-one': __dirname + '/../../lib/index'
       // react: __dirname + '/node_modules/react/dist/react.min',
       // 'react-dom': __dirname + '/node_modules/react-dom/dist/react-dom.min'
