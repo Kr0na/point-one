@@ -1,5 +1,6 @@
 /**@flow*/
 
+/*istanbul ignore next*/
 export function devTools(name:string):Function {
   return ({dispatch, getState}) => next => event => {
     const execute = data => {
@@ -7,7 +8,7 @@ export function devTools(name:string):Function {
         initialState = getState(),
         result = next(data),
         finalState = getState()
-      console.groupCollapsed('Dispatch event ' + event.type + ' in ' + name)
+      console.groupCollapsed('Dispatch event ' + data.type + ' in ' + name)
       console.log('Original State:', initialState)
       console.log('New state:', finalState)
       console.groupEnd()

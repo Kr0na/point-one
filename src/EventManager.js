@@ -3,7 +3,7 @@ let sharedEventManager
 
 let managers = {}
 
-declare class EventManager {
+declare type EventManager = {
   register(callback:Function):Function;
   dispatch(event:{type:string}):{type:string};
 }

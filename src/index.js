@@ -6,9 +6,11 @@ export {concatEventReducers} from './reducer/concatEventReducers'
 export {concatReducers} from './reducer/concatReducers'
 export {devTools} from './store/devTools'
 export {localStorageCache} from './store/localStorageCache'
+import {thunk} from './store/thunk'
 export {compose} from './utils/compose'
 export {useDispatchers} from './utils/useDispatchers'
 export {listen} from './utils/listen'
+export {makeFieldsGetter} from './utils/makeFieldsGetter'
 export {observeChange} from './utils/observeChange'
 export {
   createEventManager,

@@ -2,7 +2,7 @@
 import {register} from './EventManager'
 import isPlainObject from 'is-plain-object'
 
-declare class Store {
+declare type Store = {
   getState():any;
   listen(callback:Function):Function;
   dispatch(event:{type:string}):Object;

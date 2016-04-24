@@ -10,7 +10,7 @@ describe('Utils', () => {
       foo
     })
     let store = createStore(reducer, {name: 'Alex'})
-    it('should use initial state', () => {
+    it('should work with deprecated fields', () => {
 
       let Test = listen(store, ['name', 'foo'])(class Test {
         constructor() {

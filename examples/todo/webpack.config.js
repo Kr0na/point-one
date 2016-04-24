@@ -19,11 +19,12 @@ module.exports = {
   root: [ path.join(__dirname, 'src'), path.join(__dirname, 'node_modules') ],
   module: {
     loaders: [
-      { test: /\.jsx?$/, loader: 'babel-loader', exclude: [__dirname +'/node_modules'] }
+      { test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules|lib/ }
     ]
   },
   resolve: {
     alias: {
+      'point-one': __dirname + '/../../lib/index'
       // react: __dirname + '/node_modules/react/dist/react.min',
       // 'react-dom': __dirname + '/node_modules/react-dom/dist/react-dom.min'
     },

@@ -1,6 +1,6 @@
-import {TODO_CREATE, TODO_DONE, TODO_DELETE, TODO_UPDATE} from './constants'
+import {TODO_CREATE, TODO_DONE, TODO_DELETE} from './constants'
 
-export function createTodo({value}) {
+export function createTodo(value) {
   return {
     type: TODO_CREATE,
     value,

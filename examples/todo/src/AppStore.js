@@ -1,15 +1,18 @@
-import {createStore, concatReducers, compose, localStorageCache} from 'point-one'
+import {createStore, concatReducers, compose, useDispatchers, devTools, localStorageCache} from 'point-one'
 import {todo} from './reducers/todo'
 
-//We just add ability to store data to localStorage
-let finalCreateStore = compose(
-  localStorageCache('todo')
-)(createStore)
+const reducer = concatReducers({
+  todo
+})
 
-export let AppStore = finalCreateStore(
-  concatReducers({
-    todo
-  }),
-  {todo: []}
+export const AppStore = createStore(
+  reducer,
+  {},
+  compose(
+    localStorageCache('todo'),
+    useDispatchers(
+      devTools('AppStore')
+    )
+  )
 )
 export let dispatch = AppStore.dispatch

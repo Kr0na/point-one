@@ -1,5 +1,6 @@
 /**@flow*/
 
+/*istanbul ignore next*/
 export function localStorageCache(name:string, fields:Array<string> = []):Function {
   return next => (reducer:Function, initialState:Object = {}, extenders:?Function) => {
     let content:?string = localStorage.getItem(name)

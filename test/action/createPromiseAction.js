@@ -1,16 +1,32 @@
 import {createPromiseAction} from '../../src/index'
 
 describe('Actions', () => {
-  it('should work Promise Action', () => {
-    let action = createPromiseAction(() => {
-      return Promise.resolve({
-        name: 'Alex'
+  describe('createPromiseAction', () => {
+
+    it('should work with resolved data', () => {
+      let action = createPromiseAction(() => {
+        return Promise.resolve({
+          name: 'Alex'
+        })
+      }, 'SOME')
+      return action()(data => {
+        data.should.have.property('type', 'SOME')
+        data.should.have.property('name', 'Alex')
+        return true
       })
-    }, 'SOME')
-    return action().then(data => {
-      data.should.have.property('type', 'SOME')
-      data.should.have.property('name', 'Alex')
-      return true
+    })
+
+    it('should work with rejected data', () => {
+      let action = createPromiseAction(() => {
+        return Promise.reject({
+          name: 'Alex'
+        })
+      }, 'SOME')
+      return action()(data => {
+        data.should.have.property('type', 'SOME_FAIL')
+        data.should.have.property('name', 'Alex')
+        return true
+      })
     })
   })
 })

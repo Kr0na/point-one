@@ -1,6 +1,6 @@
 import {createStore, compose, useDispatchers, asyncDispatcher} from '../../src/index'
 
-describe('store', () => {
+describe('Utils', () => {
   describe('useDispatchers', () => {
     let reducer = (state, event) => {
         switch (event.type) {
