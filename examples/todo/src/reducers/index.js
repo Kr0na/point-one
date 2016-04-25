@@ -2,6 +2,7 @@ import {select, events, event, init, project, append, update, remove, set} from 
 import {TODO_CREATE, TODO_DONE, TODO_REOPEN, TODO_DELETE, TODO_UPDATE} from '../constants'
 
 export default events(
+  init([]),
   event(
     TODO_CREATE,
     project(
