@@ -1,9 +1,12 @@
 /**@flow */
+import type {
+  Store
+} from '../../flow/types'
 import {makeFieldsGetter} from './makeFieldsGetter'
 
-function makeWrapper(providedStore:?{listen:Function, dispatch: Function, getState: Function} = null, stateGetter:Function): Function {
+function makeWrapper(providedStore: ?Store = null, stateGetter: Function): ReactClass {
   const name = 'store' + parseInt("" + Math.random() * 1000)
-  return Component => class WrappedComponent extends Component {
+  return (Component: ReactClass) => class WrappedComponent extends Component {
     static contextTypes = {
       store: ({store}) => {
         if (
@@ -57,11 +60,12 @@ function makeWrapper(providedStore:?{listen:Function, dispatch: Function, getSta
       super.componentWillUnmout && super.componentWillUnmout()
       this._listeners.forEach(listener => listener())
       this._listeners = []
+      delete this[name]
     }
   }
 }
 
-export function listen(store:{listen:Function, dispatch:Function, getState:Function}|Function, stateGetter:Function = (state => state), deprecatedArg:?Function):Function {
+export function listen(store: Store|Function, stateGetter: Function = (state => state), deprecatedArg: ?Function): ReactClass {
   if (Array.isArray(stateGetter)) {
     if (process.env.NODE_ENV !== 'production') {
       console.warn('fields argument is deprecated and will be removed in next versions. Please change your code to use makeFieldsGetter() if you want')

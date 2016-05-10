@@ -1,16 +1,19 @@
 /**@flow*/
+import type {
+  Store,
+  PointReducer,
+  Listener,
+  ListenerRemover,
+  PointAction,
+  ThunkAction,
+  StoreExtender
+} from '../flow/types'
 import {register} from './EventManager'
 import isPlainObject from 'is-plain-object'
 
-declare type Store = {
-  getState():any;
-  listen(callback:Function):Function;
-  dispatch(event:{type:string}):Object;
-}
-
 export const POINT_INIT = '@@point/INIT'
 
-export function createStore(reducer:Function, state:any, extenders:?Function):Store {
+export function createStore(reducer:PointReducer, state:?any|StoreExtender, extenders:?StoreExtender):Store {
   if (typeof state === 'function' && typeof extenders === 'undefined') {
     extenders = state
     state = undefined
@@ -33,7 +36,7 @@ export function createStore(reducer:Function, state:any, extenders:?Function):St
     return currentState
   }
 
-  function listen(callback:Function):Function {
+  function listen(callback:Listener):ListenerRemover {
     if (!callback instanceof Function) {
       throw new Error('Listen callback must be a function')
     }
@@ -45,11 +48,11 @@ export function createStore(reducer:Function, state:any, extenders:?Function):St
     }
   }
 
-  function dispatch(event:{type:string}):{type:string} {
+  function dispatch(event:PointAction|ThunkAction):any {
     //Thunk functionallity
-    if (event instanceof Function) {
+    if (typeof event == 'function') {
       return event(dispatch, getState)
-    } else if (!isPlainObject(event)) {
+    } else if (!isPlainObject(event) || !event.hasOwnProperty('type')) {
       throw new Error('event must be a Plain Object or Function. Maybe you forgot to compose createStore with some dispatch extender?')
     }
     let
@@ -73,7 +76,7 @@ export function createStore(reducer:Function, state:any, extenders:?Function):St
     dispatch,
     //While using dangerous actions user must understand what he want to do
     dangerously: {
-      replaceReducer(reducer:Function, safe:bool = false) {
+      replaceReducer(reducer:PointReducer, safe:bool = false):void {
         if (!safe) {
           console.warn('Unsafe replacing reducer. Please check that replacing reducer is really needed')
         }

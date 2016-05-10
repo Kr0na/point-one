@@ -1,4 +1,5 @@
 /**@flow*/
+import type {HandlerThunkAction} from '../../flow/types'
 
 /**
  * Remember Action result after first call and use it after
@@ -8,7 +9,7 @@
  *   })
  * After first execution will return the same result
  */
-export function createMemoizeAction(handler:Function):Function {
+export function createMemoizeAction(handler: Function): HandlerThunkAction {
   let
     result:?Object = null,
     promise:?Promise = null

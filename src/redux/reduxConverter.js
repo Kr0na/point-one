@@ -1,9 +1,10 @@
 /**@flow*/
+import type {StoreInitializer} from '../../flow/types'
 
 /**
  * Fix main differences between point-one and redux
  */
-export function reduxConverter(next:Function):Function {
+export function reduxConverter(next:StoreInitializer):StoreInitializer {
   return (reducer, initialState, extenders) => {
     const store = next((state, event, ...other) => {
       //Redux DevTools subscribe INIT event so we convert it to redux

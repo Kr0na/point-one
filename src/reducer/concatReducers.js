@@ -1,6 +1,8 @@
 /**@flow*/
-export function concatReducers(reducers:Object):Function {
-  return (state = {}, event:{type:string}) => {
+import type {PointReducer, PointAction} from '../../flow/types'
+
+export function concatReducers(reducers: {[key: string]: PointReducer}): PointReducer {
+  return (state = {}, event:PointAction) => {
     let hasChanges = false
     const newState = Object.keys(reducers).reduce(
       (rawState, key) => {

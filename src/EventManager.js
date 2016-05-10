@@ -1,12 +1,8 @@
 /**@flow*/
+import type {EventManager, PointAction} from '../flow/types'
 let sharedEventManager
 
 let managers = {}
-
-declare type EventManager = {
-  register(callback:Function):Function;
-  dispatch(event:{type:string}):{type:string};
-}
 
 export function createEventManager():EventManager {
   let feed = []
@@ -20,7 +16,7 @@ export function createEventManager():EventManager {
     }
   }
 
-  function dispatch(event:{type:string}):{type:string} {
+  function dispatch(event:PointAction):PointAction {
     feed.forEach(item => item(event))
 
     return event
@@ -48,7 +44,7 @@ export function getSharedEventManager():EventManager {
   return sharedEventManager
 }
 
-export function dispatch(event:{type:string}):{type:string} {
+export function dispatch(event:PointAction):PointAction {
   return getSharedEventManager().dispatch(event)
 }
 

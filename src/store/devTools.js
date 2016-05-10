@@ -1,7 +1,8 @@
 /**@flow*/
+import type {DispatchExtender} from '../../flow/types'
 
 /*istanbul ignore next*/
-export function devTools(name:string):Function {
+export function devTools(name: string): DispatchExtender {
   return ({dispatch, getState}) => next => event => {
     const execute = data => {
       const

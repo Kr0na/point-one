@@ -1,10 +1,14 @@
 /**@flow*/
+import type {
+  DispatchExtender,
+  StoreExtender
+} from '../../flow/types'
 import {compose} from './compose'
 
-export function useDispatchers(...dispatchers:Array<Function>):Function {
-  return next => (reducer, initialState) => {
+export function useDispatchers(...dispatchers: Array<DispatchExtender>): StoreExtender {
+  return next => (reducer, initialState, extenders) => {
     let
-      store = next(reducer, initialState),
+      store = next(reducer, initialState, extenders),
       dispatch = store.dispatch,
       api = {
         getState: store.getState,
