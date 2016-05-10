@@ -65,7 +65,7 @@ function makeWrapper(providedStore: ?Store = null, stateGetter: Function): React
   }
 }
 
-export function listen(store: Store|Function, stateGetter: Function = (state => state), deprecatedArg: ?Function): ReactClass {
+export function listen(store: ?Store|Function, stateGetter: ?Function = (state => state), deprecatedArg: ?Function): ReactClass {
   if (Array.isArray(stateGetter)) {
     if (process.env.NODE_ENV !== 'production') {
       console.warn('fields argument is deprecated and will be removed in next versions. Please change your code to use makeFieldsGetter() if you want')
@@ -79,6 +79,6 @@ export function listen(store: Store|Function, stateGetter: Function = (state => 
   if (store instanceof Function || !store) {
     return makeWrapper(null, store || (state => state))
   } else {
-    return makeWrapper(store, stateGetter)
+    return makeWrapper(store, stateGetter || (state => state))
   }
 }
