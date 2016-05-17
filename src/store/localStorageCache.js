@@ -2,7 +2,7 @@
 import type {StoreExtender} from '../../flow/types'
 
 /*istanbul ignore next*/
-export function localStorageCache(name:string, fields:Array<string> = []):StoreExtender {
+export function localStorageCache(name: string, fields: Array<string> = []): StoreExtender {
   return next => (reducer, initialState, extenders) => {
     let content:?string = localStorage.getItem(name)
     if (localStorage.hasOwnProperty(name) && content != null) {
