@@ -33,6 +33,7 @@ declare module 'point-one' {
   declare function arrayPrepend(state: Array<any>, item: Object): Array<any>;
   declare function compose(...funcs: Array<Function>): Function;
   declare function listen(store: ?Store|Function, stateGetter: ?Function): ReactClass;
+  declare function bindActions(actions: {[key: string]: Function}): ReactClass;
   declare function makeFieldsGetter(fields: Array<string>): Function;
   declare function observeChange(fields: Array<string>): ReactClass;
   declare function useDispatchers(...dispatchers: Array<DispatchExtender>): StoreExtender;
