@@ -57,7 +57,7 @@ function makeWrapper(providedStore: ?Store = null, stateGetter: Function): React
     }
 
     componentWillUnmount() {
-      super.componentWillUnmout && super.componentWillUnmout()
+      super.componentWillUnmount && super.componentWillUnmount()
       this._listeners.forEach(listener => listener())
       this._listeners = []
       delete this[name]
