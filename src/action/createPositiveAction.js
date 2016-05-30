@@ -8,7 +8,7 @@ import type {HandlerThunkAction} from '../../flow/types'
  */
 export function createPositiveAction(handler: Function, onCall: string, onFail: string): HandlerThunkAction {
   if (onFail == null) {
-      onFail = onCall + '_FAIL'
+    onFail = onCall + '_FAIL'
   }
   return (...props) => dispatch => {
     dispatch({type: onCall, ...props[0]})

@@ -13,7 +13,7 @@ import isPlainObject from 'is-plain-object'
 
 export const POINT_INIT = '@@point/INIT'
 
-export function createStore(reducer:PointReducer, state:?any|StoreExtender, extenders:?StoreExtender):Store {
+export function createStore(reducer: PointReducer, state: ?any|StoreExtender, extenders: ?StoreExtender): Store {
   if (typeof state === 'function' && typeof extenders === 'undefined') {
     extenders = state
     state = undefined
@@ -32,11 +32,11 @@ export function createStore(reducer:PointReducer, state:?any|StoreExtender, exte
     listeners = new Map,
     currentIndex = 0
 
-  function getState():any {
+  function getState(): any {
     return currentState
   }
 
-  function listen(callback:Listener):ListenerRemover {
+  function listen(callback: Listener): ListenerRemover {
     if (!callback instanceof Function) {
       throw new Error('Listen callback must be a function')
     }
@@ -48,7 +48,7 @@ export function createStore(reducer:PointReducer, state:?any|StoreExtender, exte
     }
   }
 
-  function dispatch(event:PointAction|ThunkAction):any {
+  function dispatch(event: PointAction|ThunkAction): any {
     //Thunk functionallity
     if (typeof event == 'function') {
       return event(dispatch, getState)
@@ -76,7 +76,7 @@ export function createStore(reducer:PointReducer, state:?any|StoreExtender, exte
     dispatch,
     //While using dangerous actions user must understand what he want to do
     dangerously: {
-      replaceReducer(reducer:PointReducer, safe:bool = false):void {
+      replaceReducer(reducer: PointReducer, safe: bool = false): void {
         if (!safe) {
           console.warn('Unsafe replacing reducer. Please check that replacing reducer is really needed')
         }

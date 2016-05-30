@@ -8,6 +8,7 @@ function makeWrapper(providedStore: ?Store = null, stateGetter: Function): React
   const name = 'store' + parseInt("" + Math.random() * 1000)
   return (Component: ReactClass) => class WrappedComponent extends Component {
     static contextTypes = {
+      ...(Component.contextTypes || {}),
       store: ({store}) => {
         if (
           store

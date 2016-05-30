@@ -11,19 +11,19 @@ import type {HandlerThunkAction} from '../../flow/types'
  * let checkToUser = createPromiseAction(checkUserExists, TO_FOUND)
  */
 export function createPromiseAction(handler: Function, onSuccess: string, onFail: ?string = null): HandlerThunkAction {
-    if (!onFail) {
-        onFail = onSuccess + '_FAIL'
-    }
+  if (!onFail) {
+    onFail = onSuccess + '_FAIL'
+  }
 
-    return (...props) => dispatch => handler(...props)
+  return (...props) => dispatch => handler(...props)
       .then(
           data => (dispatch({
-              ...data,
-              type: onSuccess
+            ...data,
+            type: onSuccess
           })),
           err => (dispatch({
-              ...err,
-              type: onFail
+            ...err,
+            type: onFail
           }))
       )
 

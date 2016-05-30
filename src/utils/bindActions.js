@@ -2,8 +2,9 @@
 import type {ThunkAction} from '../../flow/types'
 
 export function bindActions(actions: {[key: string]: ThunkAction}): ReactClass {
-  return (Component:ReactClass) => class ActionComponent extends Component {
+  return (Component: ReactClass) => class ActionComponent extends Component {
     static contextTypes = {
+      ...(Component.contextTypes || {}),
       store: ({store}) => {
         if (
           store
