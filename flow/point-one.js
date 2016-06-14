@@ -7,7 +7,9 @@ import type {
   HandlerThunkAction,
   DispatchExtender,
   DispatcherAPI,
-  DispatchPlugin
+  DispatchPlugin,
+  EventManager,
+  PointAction
 } from './types'
 
 declare module 'point-one' {
@@ -37,4 +39,10 @@ declare module 'point-one' {
   declare function makeFieldsGetter(fields: Array<string>): Function;
   declare function observeChange(fields: Array<string>): ReactClass;
   declare function useDispatchers(...dispatchers: Array<DispatchExtender>): StoreExtender;
+
+  declare function getEventManager(name:string):EventManager;
+  declare function getSharedEventManager():EventManager;
+  declare function createEventManager():EventManager;
+  declare function dispatch(event:PointAction):PointAction;
+  declare function register(callback:Function):Function;
 }

@@ -22,7 +22,7 @@ export {
   getSharedEventManager,
   dispatch,
   register
-} from './EventManager'
+} from './eventManager'
 export {createStore} from './createStore'
 export {
   arrayRemove,

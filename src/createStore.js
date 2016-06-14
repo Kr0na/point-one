@@ -8,7 +8,7 @@ import type {
   ThunkAction,
   StoreExtender
 } from '../flow/types'
-import {register} from './EventManager'
+import {register} from './eventManager'
 import isPlainObject from 'is-plain-object'
 
 export const POINT_INIT = '@@point/INIT'
