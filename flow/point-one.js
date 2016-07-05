@@ -34,10 +34,10 @@ declare module 'point-one' {
   declare function arrayAppend(state: Array<any>, item: Object): Array<any>;
   declare function arrayPrepend(state: Array<any>, item: Object): Array<any>;
   declare function compose(...funcs: Array<Function>): Function;
-  declare function listen(store: ?Store|Function, stateGetter: ?Function): ReactClass;
-  declare function bindActions(actions: {[key: string]: Function}): ReactClass;
+  declare function listen<T>(store: ?Store|Function, stateGetter: ?Function): ReactClass<T>;
+  declare function bindActions<T>(actions: {[key: string]: Function}): ReactClass<T>;
   declare function makeFieldsGetter(fields: Array<string>): Function;
-  declare function observeChange(fields: Array<string>): ReactClass;
+  declare function observeChange<T>(fields: Array<string>): ReactClass<T>;
   declare function useDispatchers(...dispatchers: Array<DispatchExtender>): StoreExtender;
 
   declare function getEventManager(name:string):EventManager;

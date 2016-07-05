@@ -19,8 +19,8 @@
  * }
  * ```
  */
-export function observeChange(fields: Array<string>): ReactClass {
-  return (Component: ReactClass) => (
+export function observeChange(fields: Array<string>): ReactClass<*> {
+  return (Component: ReactClass<*>) => (
     class ObservableComponent extends Component {
 
       componentDidUpdate(prevProps: Object, prevState: Object) {

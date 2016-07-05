@@ -18,7 +18,10 @@ export function reduxConverter(next: StoreInitializer): StoreInitializer {
     const store = next(wrapReducer(reducer), initialState, extenders)
     return {
       ...store,
-      subscribe: store.listen,
+      subscribe(callback) {
+        //Redux doesn't populate store state as argument, so we remove it in subscribe
+        return store.listen(() => callback())
+      },
       dangerously: {
         replaceReducer: (reducer, safe) => store.dangerously.replaceReducer(wrapReducer(reducer), safe)
       },
