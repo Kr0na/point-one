@@ -13,6 +13,11 @@ export function concatReducers(reducers: {[key: string]: PointReducer}): PointRe
         if (value !== undefined || newValue !== undefined) {
           rawState[key] = newValue
         }
+        if (process.env.NODE_ENV !== 'production') {
+          if (value === undefined && newValue === undefined) {
+            console.warn(`Reducer for field ${key} returns undefined and there's no initialState in Store. Please try to make initialState for this field`)
+          }
+        }
         hasChanges = hasChanges || !Object.is(value, newValue)
         return rawState
       },
