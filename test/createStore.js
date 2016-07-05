@@ -1,7 +1,7 @@
 import {createStore} from '../src/index'
 
-describe('Store', () => {
-    let reducer = (state, event) => {
+describe('createStore', () => {
+    let reducer = (state = {}, event) => {
         switch (event.type) {
             case 'foo':
                 return {

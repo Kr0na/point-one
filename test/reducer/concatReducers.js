@@ -1,21 +1,21 @@
 /**@flow*/
 import {concatReducers, concatEventReducers} from '../../src/index'
 
-let foo = (value, event) => {
+let foo = (value = null, event) => {
   switch (event.type) {
     case 'foo':
       return 'bar'
     case 'bar':
-      return undefined
+      return null
     default:
       return value
   }
 }
 
-let bar = (value, event) => {
+let bar = (value = null, event) => {
   switch (event.type) {
     case 'foo':
-      return undefined
+      return null
     case 'bar':
       return 'foo'
     default:
@@ -34,7 +34,7 @@ describe('Reducer', () => {
     obj.should
       .have.property('foo', 'bar')
     obj.should
-      .not.have.property('bar')
+      .have.property('bar', null)
 
     obj = reducer(state, {type: "bar"})
     obj.should
@@ -42,9 +42,7 @@ describe('Reducer', () => {
     obj.should
       .have.property('bar', 'foo')
     obj.should
-      .not.have.property('foo')
+      .have.property('foo', null)
     obj = reducer(state, {type: "nothing"})
-    obj.should
-      .be.equal(state)
   })
 })
