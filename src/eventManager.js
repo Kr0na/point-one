@@ -45,6 +45,13 @@ export function getSharedEventManager():EventManager {
 }
 
 export function dispatch(event:PointAction):PointAction {
+  if (process.env.NODE_ENV !== 'production') {
+    if (typeof event == 'function') {
+      console.warn(`Global dispatch usage is aweful. Try to use local EventManager instances for this purposes. Please be careful because you send function to global dispatch. It's bad, because it will be executed many times`)
+    } else {
+      console.warn(`Global dispatch usage is aweful. Try to use local EventManager instances for this purposes. Event type is ${event.type}`)
+    }
+  }
   return getSharedEventManager().dispatch(event)
 }
 
