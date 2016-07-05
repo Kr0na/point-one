@@ -55,11 +55,18 @@ export function createStore(reducer: PointReducer, state: ?any|StoreExtender, ex
     } else if (!isPlainObject(event) || !event.hasOwnProperty('type')) {
       throw new Error('event must be a Plain Object or Function. Maybe you forgot to compose createStore with some dispatch extender?')
     }
-    let
-      result = currentReducer(currentState, event)
-    if (!Object.is(currentState, result)) {
-      currentState = result
-      listeners.forEach(callback => callback(currentState))
+    try {
+      let
+        result = currentReducer(currentState, event)
+      if (!Object.is(currentState, result)) {
+        currentState = result
+        listeners.forEach(callback => callback(currentState))
+      }
+    } catch(e) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(`Error with dispatching event ${event.type}. Please check corresponding reducers`, e)
+      }
+      throw e
     }
 
     return event
