@@ -3,7 +3,7 @@ import type {DispatchExtender} from '../../flow/types'
 
 /*istanbul ignore next*/
 export function devTools(name: string): DispatchExtender {
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'production') {
     // Prevent production application from console related bugs of IE and eating memory by caching console outputs
     return () => next => next
   } else {
