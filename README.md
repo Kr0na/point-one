@@ -5,6 +5,9 @@
 point-one is an state container for any kind of application. It can be used on client and server sides.
 It's built with a lot of ready to use helpers and extenders.
 
+>**Example skeleton appliation from creator:
+>[Isomorphic Todo](https://github.com/Kr0na/point-two)
+
 ## Installation
 
 ```
@@ -133,23 +136,21 @@ someState = counterReducer(someState, {type:'another'})//0
 
 ### listen
 
-listen is an decorator for React Components that will provide some data from store to your Component state
+listen is an decorator for React Components that will provide some data from store to your Component state like connect from react-redux
 
 ```js
 import React, {Component} from 'react'
-import AppStore, {dispatch} from './AppStore'
 import {authenticate} from './actions'
-import {listen} from 'point-one'
+import {listen, compose, bindActions} from 'point-one'
 
-@listen(AppStore, state => state.auth)
 class LoginForm extends Component {
 
   onLogin(e) {
     e.preventDefault()
-    dispatch(authenticate({
+    this.actions.authenticate({
       login: this.refs.login.value,
       password: this.refs.password.value
-    }))
+    })
   }
 
   render() {
@@ -170,6 +171,11 @@ class LoginForm extends Component {
     )
   }
 }
+
+export default compose(
+  listen(state => state.auth),
+  bindActions({authenticate})
+)(LoginForm)
 ```
 
 This is really simple component but as you can see you don't need to write code for sync state between store and component
