@@ -7,6 +7,9 @@ import {makeFieldsGetter} from './makeFieldsGetter'
 function makeWrapper(providedStore: ?Store = null, stateGetter: Function): ReactClass<*> {
   const name = 'store' + parseInt("" + Math.random() * 1000)
   return (Component: ReactClass<*>) => class WrappedComponent extends Component {
+
+    static displayName = `Listen(${Component.displayName || Component.name || Component.prototype.constructor.name})`
+
     static contextTypes = {
       ...(Component.contextTypes || {}),
       store: ({store}) => {

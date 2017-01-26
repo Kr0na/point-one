@@ -23,6 +23,8 @@ export function observeChange(fields: Array<string>): ReactClass<*> {
   return (Component: ReactClass<*>) => (
     class ObservableComponent extends Component {
 
+    static displayName = `Observe(${Component.displayName || Component.name || Component.prototype.constructor.name})`
+
       componentDidUpdate(prevProps: Object, prevState: Object) {
         super.componentDidUpdate && super.componentDidUpdate(prevProps, prevState)
         fields.forEach(key => {

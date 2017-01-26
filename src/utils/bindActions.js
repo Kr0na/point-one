@@ -3,6 +3,9 @@ import type {ThunkAction} from '../../flow/types'
 
 export function bindActions(actions: {[key: string]: ThunkAction}): ReactClass<*> {
   return (Component: ReactClass<*>) => class ActionComponent extends Component {
+
+    static displayName = `Actions(${Component.displayName || Component.name || Component.prototype.constructor.name})`
+
     static contextTypes = {
       ...(Component.contextTypes || {}),
       store: ({store}) => {
