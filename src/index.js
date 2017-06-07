@@ -4,9 +4,13 @@ export {createPositiveAction} from './action/createPositiveAction'
 export {createMemoizeAction} from './action/createMemoizeAction'
 export {concatEventReducers} from './reducer/concatEventReducers'
 export {concatReducers} from './reducer/concatReducers'
+//Please include this files manually for now
+// export {reduxConverter} from './redux/reduxConverter'
+// export {restoreListen} from './redux/restoreListen'
 export {devTools} from './store/devTools'
 export {localStorageCache} from './store/localStorageCache'
-import {thunk} from './store/thunk'
+export {thunk} from './store/thunk'
+export {bindActions} from './utils/bindActions'
 export {compose} from './utils/compose'
 export {useDispatchers} from './utils/useDispatchers'
 export {listen} from './utils/listen'
@@ -18,7 +22,7 @@ export {
   getSharedEventManager,
   dispatch,
   register
-} from './EventManager'
+} from './eventManager'
 export {createStore} from './createStore'
 export {
   arrayRemove,

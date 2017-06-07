@@ -2,10 +2,19 @@ import React, {Component} from 'react'
 import {listen} from 'point-one'
 import {AppStore, dispatch} from '../AppStore'
 import TodoItem from './TodoItem'
-import {doneTodo, deleteTodo, createTodo} from '../actions'
+import {doneTodo, reopenTodo, deleteTodo, updateTodo, createTodo} from '../actions'
 
 @listen()
 class TodoContainer extends Component {
+
+  toggleRedux() {
+    if (localStorage.getItem('emulateRedux')) {
+      localStorage.removeItem('emulateRedux')
+    } else {
+      localStorage.setItem('emulateRedux', 1)
+    }
+    location.reload()
+  }
 
   createTodo(e) {
     if (e.keyCode == 13 && e.target.value.trim().length > 1) {
@@ -16,6 +25,7 @@ class TodoContainer extends Component {
 
   render() {
     const {todo} = this.state
+    const redux = localStorage.getItem('emulateRedux')
     return (
       <div className="container">
         <header className="header">
@@ -26,14 +36,18 @@ class TodoContainer extends Component {
           <ul className="todo-list">
             {todo.map(item => (
               <TodoItem
-                onDone={e => dispatch(doneTodo(item.id))}
+                onDone={e => dispatch(item.status == 'done' ? reopenTodo(item.id) : doneTodo(item.id))}
                 onDelete={e => dispatch(deleteTodo(item.id))}
+                onUpdate={value => dispatch(updateTodo(item.id, value))}
                 key={item.id}
                 {...item}
               />
             ))}
           </ul>
         </section>
+        <footer className="footer">
+          <button className="clear-completed" onClick={e => this.toggleRedux()}>{redux ? 'Disable Redux DevTools' : 'Enable Redux DevTools'}</button>
+        </footer>
       </div>
     )
   }

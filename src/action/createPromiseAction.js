@@ -1,4 +1,5 @@
 /**@flow*/
+import type {HandlerThunkAction} from '../../flow/types'
 
 /**
  * Converts some handler result Promise filling to event for dispatching.
@@ -9,20 +10,20 @@
  * let checkFromUser = createPromiseAction(checkUserExists, FROM_FOUND)
  * let checkToUser = createPromiseAction(checkUserExists, TO_FOUND)
  */
-export function createPromiseAction(handler:Function, onSuccess:string, onFail:?string = null):Function {
-    if (!onFail) {
-        onFail = onSuccess + '_FAIL'
-    }
+export function createPromiseAction(handler: Function, onSuccess: string, onFail: ?string = null): HandlerThunkAction {
+  if (!onFail) {
+    onFail = onSuccess + '_FAIL'
+  }
 
-    return (...props) => dispatch => handler(...props)
+  return (...props) => dispatch => handler(...props)
       .then(
           data => (dispatch({
-              ...data,
-              type: onSuccess
+            ...data,
+            type: onSuccess
           })),
           err => (dispatch({
-              ...err,
-              type: onFail
+            ...err,
+            type: onFail
           }))
       )
 

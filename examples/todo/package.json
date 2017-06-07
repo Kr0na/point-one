@@ -12,6 +12,7 @@
     "babel-loader": "^5.4.0",
     "express": "^4.13.3",
     "point-one": "^0.4.0-beta.2",
+    "point-reducer-builder": "0.0.1",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "webpack": "^1.12.9"

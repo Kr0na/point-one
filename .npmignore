@@ -4,3 +4,9 @@
 .gitignore
 examples
 coverage
+.babelrc
+.flowconfig
+docs
+test
+.travis.yml
+.idea.chai.js

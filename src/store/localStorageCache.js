@@ -1,8 +1,9 @@
 /**@flow*/
+import type {StoreExtender} from '../../flow/types'
 
 /*istanbul ignore next*/
-export function localStorageCache(name:string, fields:Array<string> = []):Function {
-  return next => (reducer:Function, initialState:Object = {}, extenders:?Function) => {
+export function localStorageCache(name: string, fields: Array<string> = []): StoreExtender {
+  return next => (reducer, initialState, extenders) => {
     let content:?string = localStorage.getItem(name)
     if (localStorage.hasOwnProperty(name) && content != null) {
       try {
@@ -15,7 +16,8 @@ export function localStorageCache(name:string, fields:Array<string> = []):Functi
       }
     }
     const store = next(reducer, initialState, extenders)
-    store.listen(state => {
+    store.listen(() => {
+      const state = store.getState()
       if (fields.length) {
         const data = fields.reduce((st, key) => {
           st[key] = state[key]
